@@ -4,14 +4,19 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="dataReaderImpl"
-          class="otus.ru.example.dao.DataReaderDaoImpl">
+    <bean id="questionDao"
+          class="otus.ru.example.dao.QuestionDaoImpl">
         <constructor-arg value="Questions.csv"/>
     </bean>
 
-    <bean id="dataReaderServiceImpl"
-          class="otus.ru.example.service.DataReaderServiceImpl">
-        <constructor-arg ref="dataReaderImpl"/>
+    <bean id="testService"
+          class="otus.ru.example.service.TestServiceImpl">
+        <constructor-arg ref="questionDao"/>
+    </bean>
+
+    <bean id="testRunnerService"
+          class="otus.ru.example.service.TestRunnerServiceImpl">
+        <constructor-arg ref="testService"/>
     </bean>
 
 </beans>

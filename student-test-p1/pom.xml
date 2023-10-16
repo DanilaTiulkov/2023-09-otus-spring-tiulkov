@@ -33,6 +33,7 @@
       <scope>test</scope>
     </dependency>
 
+
     <!-- Это зависимость spring-context, содержит базовую функциональность IoC -->
     <dependency>
       <groupId>org.springframework</groupId>

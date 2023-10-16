@@ -1,21 +1,22 @@
 package otus.ru.example.dao;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
+import otus.ru.example.model.Question;
 import java.util.List;
-
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DataReaderImplTest {
-    @DisplayName("Проверка размера коллекций внутри коллекции result")
+    @DisplayName("Проверка количества вопросов внутри коллекции result")
     @Test
-    void getDataTest() {
-        DataReaderDaoImpl dri = new DataReaderDaoImpl("Questions.csv");
-        List<List<String>> result = dri.getData();
-        for (List<String> collection : result) {
-            assertEquals(3, collection.size());
-        }
+    void getQuestions() {
+        QuestionDaoImpl qdi = new QuestionDaoImpl("Questions.csv");
+        List<Question> result = qdi.getQuestions();
+        assertEquals(15, result.size());
+
+
+
+
 
     }
 }
