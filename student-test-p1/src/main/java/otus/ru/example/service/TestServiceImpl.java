@@ -7,15 +7,18 @@ import java.util.List;
 
 public class TestServiceImpl implements TestService {
 
-    private final QuestionDao reader;
+    private final QuestionDao questionDao;
 
-    public TestServiceImpl(QuestionDao reader) {
-        this.reader = reader;
+    private final IOService ioService;
+
+    public TestServiceImpl(QuestionDao questionDao, IOService ioService) {
+        this.questionDao = questionDao;
+        this.ioService = ioService;
     }
 
     @Override
     public void executeTest() {
-        List<Question> result = reader.getQuestions();
-        result.forEach(System.out::println);
+        List<Question> questions = questionDao.getQuestions();
+        questions.forEach(question -> ioService.printLine(question.toString()));
     }
 }

@@ -20,7 +20,7 @@ public class QuestionDaoImpl implements QuestionDao {
 
     @Override
     public List<Question> getQuestions() {
-        List<Question> result = new ArrayList<>();
+        List<Question> questions = new ArrayList<>();
             try (InputStream is = getClass().getClassLoader().getResourceAsStream(fileName);
                  InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
                  BufferedReader br = new BufferedReader(isr)) {
@@ -36,12 +36,12 @@ public class QuestionDaoImpl implements QuestionDao {
                     String question = split[1];
                     String answer = split[2];
                     int correctAnswer = Integer.parseInt(split[3]);
-                    result.add(new Question(questionId, question, answer, correctAnswer));
+                    questions.add(new Question(questionId, question, answer, correctAnswer));
 
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        return result;
+        return questions;
     }
 }
