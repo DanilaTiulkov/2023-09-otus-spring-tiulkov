@@ -11,6 +11,5 @@ public class Main {
                 new ClassPathXmlApplicationContext("applicationContext.xml");
         TestRunnerService testRunnerService = context.getBean("testRunnerService", TestRunnerService.class);
         testRunnerService.run();
-
     }
 }
