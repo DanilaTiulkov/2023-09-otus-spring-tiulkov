@@ -12,10 +12,5 @@ class DataReaderImplTest {
         QuestionDaoImpl qdi = new QuestionDaoImpl("Questions.csv");
         List<Question> result = qdi.getQuestions();
         assertEquals(15, result.size());
-
-
-
-
-
     }
 }
