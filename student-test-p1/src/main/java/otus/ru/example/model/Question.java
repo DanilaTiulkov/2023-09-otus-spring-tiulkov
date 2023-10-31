@@ -4,35 +4,65 @@ import java.util.Objects;
 
 public class Question {
 
-    private final int id;
+    private int questionId;
 
-    private final String question;
+    private String question;
 
-    private final String answer;
+    private int answerId;
 
-    private final int correctAnswer;
+    private String answer;
 
-    public Question(int id, String question, String answer, int correctAnswer) {
-        this.id = id;
+    private int correctAnswer;
+
+    public Question(int questionId, String question, int answerId, String answer, int correctAnswer) {
+        this.questionId = questionId;
         this.question = question;
+        this.answerId = answerId;
         this.answer = answer;
         this.correctAnswer = correctAnswer;
     }
 
-    public int getId() {
-        return id;
+    public Question() {
+    }
+
+    public int getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(int questionId) {
+        this.questionId = questionId;
     }
 
     public String getQuestion() {
         return question;
     }
 
+    public void setQuestion(String question) {
+        this.question = question;
+    }
+
+    public int getAnswerId() {
+        return answerId;
+    }
+
+    public void setAnswerId(int answerId) {
+        this.answerId = answerId;
+    }
+
     public String getAnswer() {
         return answer;
     }
 
-    public int getcorrectAnswer() {
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    public int getCorrectAnswer() {
         return correctAnswer;
+    }
+
+    public void setCorrectAnswer(int correctAnswer) {
+        this.correctAnswer = correctAnswer;
     }
 
     @Override
@@ -44,17 +74,18 @@ public class Question {
             return false;
         }
         Question question1 = (Question) o;
-        return id == question1.id && correctAnswer == question1.correctAnswer
-                && Objects.equals(question, question1.question) && Objects.equals(answer, question1.answer);
+        return questionId == question1.questionId && answerId == question1.answerId
+                && correctAnswer == question1.correctAnswer && Objects.equals(question, question1.question)
+                && Objects.equals(answer, question1.answer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, question, answer, correctAnswer);
+        return Objects.hash(questionId, question, answerId, answer, correctAnswer);
     }
 
     @Override
     public String toString() {
-        return id + " " + question + " " + answer + " " + correctAnswer;
+        return questionId + " " + question + " " + answer + " " + correctAnswer;
     }
 }

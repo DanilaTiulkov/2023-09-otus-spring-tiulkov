@@ -12,6 +12,7 @@
     <maven.compiler.source>11</maven.compiler.source>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring.version>6.0.12</spring.version>
+    <opencsv.version>5.8</opencsv.version>
     <checkstyle-plugin.version>3.2.2</checkstyle-plugin.version>
     <checkstyle.version>10.11.0</checkstyle.version>
     <checkstyle.config.url>https://raw.githubusercontent.com/OtusTeam/Spring/master/checkstyle.xml</checkstyle.config.url>
@@ -32,8 +33,17 @@
       <version>3.24.2</version>
       <scope>test</scope>
     </dependency>
-
-
+    <dependency>
+      <groupId>com.opencsv</groupId>
+      <artifactId>opencsv</artifactId>
+      <version>${opencsv.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-collections</groupId>
+          <artifactId>commons-collections</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
     <!-- Это зависимость spring-context, содержит базовую функциональность IoC -->
     <dependency>
       <groupId>org.springframework</groupId>
@@ -50,7 +60,6 @@
       <artifactId>spring-beans</artifactId>
       <version>${spring.version}</version>
     </dependency>
-
 
   </dependencies>
 
@@ -78,6 +87,7 @@
           </execution>
         </executions>
       </plugin>
+
     </plugins>
   </build>
 </project>

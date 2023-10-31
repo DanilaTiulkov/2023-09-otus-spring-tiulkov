@@ -14,4 +14,9 @@ public class StreamsIOService implements IOService {
     public void printLine(String s) {
         printStream.println(s);
     }
+
+    @Override
+    public void printFormattedLine(String s, Object... args) {
+        printStream.printf(s + "%n", args);
+    }
 }

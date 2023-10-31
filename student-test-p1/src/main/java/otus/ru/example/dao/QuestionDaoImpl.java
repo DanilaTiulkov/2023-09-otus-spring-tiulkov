@@ -1,5 +1,8 @@
 package otus.ru.example.dao;
 
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+import otus.ru.example.exceptions.QuestionReadException;
 import otus.ru.example.model.Question;
 
 import java.io.BufferedReader;
@@ -8,6 +11,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class QuestionDaoImpl implements QuestionDao {
@@ -20,28 +24,43 @@ public class QuestionDaoImpl implements QuestionDao {
 
     @Override
     public List<Question> getQuestions() {
-        List<Question> questions = new ArrayList<>();
-            try (InputStream is = getClass().getClassLoader().getResourceAsStream(fileName);
-                 InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
-                 BufferedReader br = new BufferedReader(isr)) {
-                String line;
-                boolean firstLine = true;
-                while ((line = br.readLine()) != null) {
-                    if (firstLine) {
-                        firstLine = false;
-                        continue;
-                    }
-                    String[] split = line.split(",");
-                    int questionId = Integer.parseInt(split[0]);
-                    String question = split[1];
-                    String answer = split[2];
-                    int correctAnswer = Integer.parseInt(split[3]);
-                    questions.add(new Question(questionId, question, answer, correctAnswer));
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream(fileName);
+             InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+             BufferedReader br = new BufferedReader(isr)) {
+            CsvToBean<Question> csvToBean = new CsvToBeanBuilder<Question>(br)
+                    .withType(Question.class)
+                    .withSeparator(',')
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .withIgnoreEmptyLine(true)
+                    .build();
+            Iterator<Question> iterator = csvToBean.iterator();
+            List<Question> questions = questionsIterator(iterator);
+            return questions;
+        } catch (IOException  ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+    }
 
+        public List<Question> questionsIterator(Iterator<Question> iterator) {
+        List<Question> questions = new ArrayList<>();
+        try {
+            while (iterator.hasNext()) {
+                Question iteratorQuestion = iterator.next();
+                int questionId = iteratorQuestion.getQuestionId();
+                String question = iteratorQuestion.getQuestion();
+                int answerId = iteratorQuestion.getAnswerId();
+                String answer = iteratorQuestion.getAnswer();
+                int correctAnswer = iteratorQuestion.getCorrectAnswer();
+                if (questionId < 0 || question.isEmpty()
+                        || answerId < 0 || answer.isEmpty()) {
+                    throw new QuestionReadException("The question file wasn't read. " +
+                            "Check that the data is entered correctly", new RuntimeException());
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                questions.add(iteratorQuestion);
             }
+        } catch (QuestionReadException ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
         return questions;
     }
 }
