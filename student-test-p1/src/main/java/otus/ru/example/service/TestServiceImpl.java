@@ -19,14 +19,13 @@ public class TestServiceImpl implements TestService {
     @Override
     public void executeTest() {
         List<Question> questions = questionDao.getQuestions();
-        for (int count = 1; count < questions.size(); count++) {
+        for (int count = 0; count < questions.size(); count++) {
             String question = questions.get(count).getQuestion();
             String firstAnswer = questions.get(count).getFirstAnswer();
             String secondAnswer = questions.get(count).getSecondAnswer();
             String thirdAnswer = questions.get(count).getThirdAnswer();
-            String correctAnswer = questions.get(count).getCorrectAnswer();
             ioService.printFormattedLine("%d.%s\n %s\n %s\n %s",
-                    count, question, firstAnswer, secondAnswer, thirdAnswer);
+                    count + 1, question, firstAnswer, secondAnswer, thirdAnswer);
         }
     }
 }
