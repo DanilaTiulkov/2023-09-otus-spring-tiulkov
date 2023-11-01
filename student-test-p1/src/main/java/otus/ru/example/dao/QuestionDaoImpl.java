@@ -46,13 +46,13 @@ public class QuestionDaoImpl implements QuestionDao {
         try {
             while (iterator.hasNext()) {
                 Question iteratorQuestion = iterator.next();
-                int questionId = iteratorQuestion.getQuestionId();
                 String question = iteratorQuestion.getQuestion();
-                int answerId = iteratorQuestion.getAnswerId();
-                String answer = iteratorQuestion.getAnswer();
-                int correctAnswer = iteratorQuestion.getCorrectAnswer();
-                if (questionId < 0 || question.isEmpty()
-                        || answerId < 0 || answer.isEmpty()) {
+                String firstAnswer = iteratorQuestion.getFirstAnswer();
+                String secondAnswer = iteratorQuestion.getSecondAnswer();
+                String thirdAnswer = iteratorQuestion.getThirdAnswer();
+                String correctAnswer = iteratorQuestion.getCorrectAnswer();
+                if (question.isEmpty() || firstAnswer.isEmpty() ||
+                        secondAnswer.isEmpty() || thirdAnswer.isEmpty() || correctAnswer.isEmpty()) {
                     throw new QuestionReadException("The question file wasn't read. " +
                             "Check that the data is entered correctly", new RuntimeException());
                 }

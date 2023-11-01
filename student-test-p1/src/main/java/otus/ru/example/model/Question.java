@@ -4,33 +4,26 @@ import java.util.Objects;
 
 public class Question {
 
-    private int questionId;
-
     private String question;
 
-    private int answerId;
+    private String firstAnswer;
 
-    private String answer;
+    private String secondAnswer;
 
-    private int correctAnswer;
+    private String thirdAnswer;
 
-    public Question(int questionId, String question, int answerId, String answer, int correctAnswer) {
-        this.questionId = questionId;
+    private String correctAnswer;
+
+
+    public Question(String question, String firstAnswer, String secondAnswer, String thirdAnswer, String correctAnswer) {
         this.question = question;
-        this.answerId = answerId;
-        this.answer = answer;
+        this.firstAnswer = firstAnswer;
+        this.secondAnswer = secondAnswer;
+        this.thirdAnswer = thirdAnswer;
         this.correctAnswer = correctAnswer;
     }
 
     public Question() {
-    }
-
-    public int getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(int questionId) {
-        this.questionId = questionId;
     }
 
     public String getQuestion() {
@@ -41,27 +34,35 @@ public class Question {
         this.question = question;
     }
 
-    public int getAnswerId() {
-        return answerId;
+    public String getFirstAnswer() {
+        return firstAnswer;
     }
 
-    public void setAnswerId(int answerId) {
-        this.answerId = answerId;
+    public void setFirstAnswer(String firstAnswer) {
+        this.firstAnswer = firstAnswer;
     }
 
-    public String getAnswer() {
-        return answer;
+    public String getSecondAnswer() {
+        return secondAnswer;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
+    public void setSecondAnswer(String secondAnswer) {
+        this.secondAnswer = secondAnswer;
     }
 
-    public int getCorrectAnswer() {
+    public String getThirdAnswer() {
+        return thirdAnswer;
+    }
+
+    public void setThirdAnswer(String thirdAnswer) {
+        this.thirdAnswer = thirdAnswer;
+    }
+
+    public String getCorrectAnswer() {
         return correctAnswer;
     }
 
-    public void setCorrectAnswer(int correctAnswer) {
+    public void setCorrectAnswer(String correctAnswer) {
         this.correctAnswer = correctAnswer;
     }
 
@@ -74,18 +75,25 @@ public class Question {
             return false;
         }
         Question question1 = (Question) o;
-        return questionId == question1.questionId && answerId == question1.answerId
-                && correctAnswer == question1.correctAnswer && Objects.equals(question, question1.question)
-                && Objects.equals(answer, question1.answer);
+        return Objects.equals(question, question1.question) && Objects.equals(firstAnswer, question1.firstAnswer)
+                && Objects.equals(secondAnswer, question1.secondAnswer)
+                && Objects.equals(thirdAnswer, question1.thirdAnswer)
+                && Objects.equals(correctAnswer, question1.correctAnswer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(questionId, question, answerId, answer, correctAnswer);
+        return Objects.hash(question, firstAnswer, secondAnswer, thirdAnswer, correctAnswer);
     }
 
     @Override
     public String toString() {
-        return questionId + " " + question + " " + answer + " " + correctAnswer;
+        return "Question{" +
+                "question='" + question + '\'' +
+                ", firstAnswer='" + firstAnswer + '\'' +
+                ", secondAnswer='" + secondAnswer + '\'' +
+                ", thirdAnswer='" + thirdAnswer + '\'' +
+                ", correctAnswer='" + correctAnswer + '\'' +
+                '}';
     }
 }
