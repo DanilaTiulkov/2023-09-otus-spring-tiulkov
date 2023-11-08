@@ -1,7 +1,7 @@
 package otus.ru.example.dao;
 
 
-import otus.ru.example.model.Question;
+import otus.ru.example.domain.Question;
 
 import java.util.List;
 

@@ -2,8 +2,10 @@ package otus.ru.example.dao;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import otus.ru.example.dao.dto.QuestionDto;
+import otus.ru.example.domain.Answer;
 import otus.ru.example.exceptions.QuestionReadException;
-import otus.ru.example.model.Question;
+import otus.ru.example.domain.Question;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,40 +29,47 @@ public class QuestionDaoImpl implements QuestionDao {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(fileName);
              InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
              BufferedReader br = new BufferedReader(isr)) {
-            CsvToBean<Question> csvToBean = new CsvToBeanBuilder<Question>(br)
-                    .withType(Question.class)
+            CsvToBean<QuestionDto> csvToBean = new CsvToBeanBuilder<QuestionDto>(br)
+                    .withType(QuestionDto.class)
                     .withSeparator(',')
                     .withIgnoreLeadingWhiteSpace(true)
+                    .withSkipLines(1)
                     .withIgnoreEmptyLine(true)
                     .build();
-            Iterator<Question> iterator = csvToBean.iterator();
+            Iterator<QuestionDto> iterator = csvToBean.iterator();
             List<Question> questions = questionsIterator(iterator);
             return questions;
-        } catch (IOException  ex) {
-            throw new RuntimeException(ex.getMessage());
+        } catch (IOException ex) {
+            throw new QuestionReadException(ex.getMessage(), ex);
         }
     }
 
-        public List<Question> questionsIterator(Iterator<Question> iterator) {
+    private List<Question> questionsIterator(Iterator<QuestionDto> iterator) {
         List<Question> questions = new ArrayList<>();
         try {
             while (iterator.hasNext()) {
-                Question iteratorQuestion = iterator.next();
-                String question = iteratorQuestion.getQuestion();
-                String firstAnswer = iteratorQuestion.getFirstAnswer();
-                String secondAnswer = iteratorQuestion.getSecondAnswer();
-                String thirdAnswer = iteratorQuestion.getThirdAnswer();
-                String correctAnswer = iteratorQuestion.getCorrectAnswer();
-                if (question.isEmpty() || firstAnswer.isEmpty() ||
-                        secondAnswer.isEmpty() || thirdAnswer.isEmpty() || correctAnswer.isEmpty()) {
-                    throw new QuestionReadException("The question file wasn't read. " +
-                            "Check that the data is entered correctly", new RuntimeException());
-                }
+                Question iteratorQuestion = iterator.next().toDomainObject();
+                checkQuestion(iteratorQuestion);
                 questions.add(iteratorQuestion);
             }
         } catch (QuestionReadException ex) {
-            throw new RuntimeException(ex.getMessage());
+            throw new QuestionReadException(ex.getMessage());
         }
         return questions;
+    }
+
+    private void checkQuestion (Question question) throws QuestionReadException {
+        String questionText = question.text();
+        List<Answer> answers = question.answers();
+        if (questionText.isEmpty()) {
+            throw new QuestionReadException("The question file wasn't read. " +
+                    "The question field is empty");
+        }
+        answers.forEach(answer -> {
+            if (answer.text().isEmpty()) {
+                throw new QuestionReadException("The question file wasn't read. " +
+                        "the answer field is empty");
+            }
+        });
     }
 }
