@@ -1,11 +1,13 @@
 package otus.ru.example.service;
 
 
+import org.springframework.stereotype.Service;
 import otus.ru.example.dao.QuestionDao;
 import otus.ru.example.domain.Answer;
 import otus.ru.example.domain.Question;
 import java.util.List;
 
+@Service("testService")
 public class TestServiceImpl implements TestService {
 
     private final QuestionDao questionDao;

@@ -2,6 +2,8 @@ package otus.ru.example.dao;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
 import otus.ru.example.dao.dto.QuestionDto;
 import otus.ru.example.domain.Answer;
 import otus.ru.example.exceptions.QuestionReadException;
@@ -16,11 +18,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+@Repository("questionDao")
 public class QuestionDaoImpl implements QuestionDao {
 
     private final String fileName;
 
-    public QuestionDaoImpl(String fileName) {
+    public QuestionDaoImpl(@Value("Questions.csv") String fileName) {
         this.fileName = fileName;
     }
 

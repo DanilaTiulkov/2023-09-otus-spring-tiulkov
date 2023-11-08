@@ -1,5 +1,8 @@
 package otus.ru.example.service;
 
+import org.springframework.stereotype.Service;
+
+@Service("testRunnerService")
 public class TestRunnerServiceImpl implements TestRunnerService {
 
     private final TestService testService;
