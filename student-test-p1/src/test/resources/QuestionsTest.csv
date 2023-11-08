@@ -1,16 +1,6 @@
-questionId,question,answerId,answer,correctAnswer
-1,What is the capital of Great Britain?,1,London,1
-1,What is the capital of Great Britain?,2,Paris,0
-1,What is the capital of Great Britain?,3,Beijing,0
-2,What is the capital of Russia?,1,Dhaka,0
-2,What is the capital of Russia?,2,Moscow,1
-2,What is the capital of Russia?,3,Jerusalem,0
-3,How many planets are there in the solar system?,1,Six,0
-3,How many planets are there in the solar system?,2,Seven,0
-3,How many planets are there in the solar system?,3,Eight,1
-4,What is the closest star to Earth?,1,Alpha Centauri,0
-4,What is the closest star to Earth?,2,Sun,1
-4,What is the closest star to Earth?,3,WISE 0855-0714,0
-5,How many oceans are there on the planet?,1,Ten,0
-5,How many oceans are there on the planet?,2,One,0
-5,How many oceans are there on the planet?,3,Five,1
+questions,answers
+What is the capital of Great Britain?,London%true|Paris%false|Beijing%false
+What is the capital of Russia?,Dhaka%false|Moscow%true|Jerusalem%false
+How many planets are there in the solar system?,Six%false|Seven%false|Eight%true
+What is the closest star to Earth?,Alpha Centauri%false|Sun%true|WISE 0855-0714%false
+How many oceans are there on the planet?,Ten%false|One%false|Five%true
