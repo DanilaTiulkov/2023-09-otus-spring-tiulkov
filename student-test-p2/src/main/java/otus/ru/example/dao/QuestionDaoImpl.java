@@ -3,7 +3,9 @@ package otus.ru.example.dao;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
+import otus.ru.example.config.TestFileNameProvider;
 import otus.ru.example.dao.dto.QuestionDto;
 import otus.ru.example.domain.Answer;
 import otus.ru.example.exceptions.QuestionReadException;
@@ -21,14 +23,15 @@ import java.util.List;
 @Repository("questionDao")
 public class QuestionDaoImpl implements QuestionDao {
 
-    private final String fileName;
+    private final TestFileNameProvider testFileNameProvider;
 
-    public QuestionDaoImpl(@Value("Questions.csv") String fileName) {
-        this.fileName = fileName;
+    public QuestionDaoImpl(TestFileNameProvider testFileNameProvider) {
+        this.testFileNameProvider = testFileNameProvider;
     }
 
     @Override
     public List<Question> getQuestions() {
+        String fileName = testFileNameProvider.getTestFileName();
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(fileName);
              InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
              BufferedReader br = new BufferedReader(isr)) {
@@ -40,14 +43,14 @@ public class QuestionDaoImpl implements QuestionDao {
                     .withIgnoreEmptyLine(true)
                     .build();
             Iterator<QuestionDto> iterator = csvToBean.iterator();
-            List<Question> questions = questionsIterator(iterator);
+            List<Question> questions = questionsDtoToQuestions(iterator);
             return questions;
         } catch (IOException ex) {
             throw new QuestionReadException(ex.getMessage(), ex);
         }
     }
 
-    private List<Question> questionsIterator(Iterator<QuestionDto> iterator) {
+    private List<Question> questionsDtoToQuestions(Iterator<QuestionDto> iterator) {
         List<Question> questions = new ArrayList<>();
         try {
             while (iterator.hasNext()) {

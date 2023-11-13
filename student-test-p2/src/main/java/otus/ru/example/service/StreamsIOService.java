@@ -30,4 +30,15 @@ public class StreamsIOService implements IOService {
     public void printFormattedLine(String s, Object... args) {
         printStream.printf(s + "%n", args);
     }
+
+    @Override
+    public String readStringWithPrompt(String prompt) {
+        printLine(prompt);
+        return scanner.nextLine();
+    }
+
+    @Override
+    public String readString() {
+        return scanner.nextLine();
+    }
 }
