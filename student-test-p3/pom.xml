@@ -2,7 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.example</groupId>
-  <artifactId>student-test-p2</artifactId>
+  <artifactId>student-test-p3</artifactId>
   <version>1.0</version>
   <name>Archetype - lab1</name>
   <url>http://maven.apache.org</url>
