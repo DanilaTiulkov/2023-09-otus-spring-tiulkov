@@ -2,8 +2,6 @@ package otus.ru.example.dao;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
 import otus.ru.example.config.TestFileNameProvider;
 import otus.ru.example.dao.dto.QuestionDto;

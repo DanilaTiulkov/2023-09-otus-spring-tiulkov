@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import otus.ru.example.domain.Student;
 
 @Service("studentService")
-public class StudentServiceImpl implements StudentService{
+public class StudentServiceImpl implements StudentService {
 
     private final IOService ioService;
 

@@ -8,7 +8,7 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @ComponentScan("otus.ru.example")// Какая разница между аннотациями в этом классе, этой же аннотацией, но над классом Main?
 @PropertySource("classpath:application.properties")
-public class AppConfig implements TestConfig, TestFileNameProvider{ // Зачем использовать два интерфейса, если все данные можно поместить в TestConfig?
+public class AppConfig implements TestConfig, TestFileNameProvider { // Зачем использовать два интерфейса, если все данные можно поместить в TestConfig?
 
     private final int rightAnswerCountToPass;
 
