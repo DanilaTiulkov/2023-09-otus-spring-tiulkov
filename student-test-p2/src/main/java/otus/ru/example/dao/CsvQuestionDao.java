@@ -19,11 +19,11 @@ import java.util.Iterator;
 import java.util.List;
 
 @Repository("questionDao")
-public class QuestionDaoImpl implements QuestionDao {
+public class CsvQuestionDao implements QuestionDao {
 
     private final TestFileNameProvider testFileNameProvider;
 
-    public QuestionDaoImpl(TestFileNameProvider testFileNameProvider) {
+    public CsvQuestionDao(TestFileNameProvider testFileNameProvider) {
         this.testFileNameProvider = testFileNameProvider;
     }
 

@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class QuestionDaoImplTest {
+class CsvQuetionDao {
 
     private TestFileNameProvider testFileNameProvider;
 
@@ -21,7 +21,7 @@ class QuestionDaoImplTest {
     @BeforeAll
     void init(){
         testFileNameProvider = new AppConfig(3, "QuestionsTest.csv");
-        qdi = new QuestionDaoImpl(testFileNameProvider);
+        qdi = new CsvQuestionDao(testFileNameProvider);
     }
 
     @DisplayName("Проверка количества вопросов внутри коллекции result")
