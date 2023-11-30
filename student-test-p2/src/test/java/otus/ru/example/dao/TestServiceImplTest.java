@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
 @ExtendWith(MockitoExtension.class)
 class TestServiceImplTest {
 

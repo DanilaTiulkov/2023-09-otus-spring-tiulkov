@@ -43,7 +43,7 @@ public class CsvQuestionDao implements QuestionDao {
             Iterator<QuestionDto> iterator = csvToBean.iterator();
             List<Question> questions = questionsDtoToQuestions(iterator);
             return questions;
-        } catch (IOException ex) {
+        } catch (IOException | NullPointerException ex) {
             throw new QuestionReadException(ex.getMessage(), ex);
         }
     }
