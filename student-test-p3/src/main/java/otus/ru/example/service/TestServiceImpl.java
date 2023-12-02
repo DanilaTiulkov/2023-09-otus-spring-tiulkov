@@ -16,29 +16,37 @@ public class TestServiceImpl implements TestService {
 
     private final QuestionDao questionDao;
 
-    private final IOService ioService;
+    private final LocalizedIOService localizedIOService;
 
     @Autowired
-    public TestServiceImpl(QuestionDao questionDao, IOService ioService) {
+    public TestServiceImpl(QuestionDao questionDao, LocalizedIOService localizedIOService) {
         this.questionDao = questionDao;
-        this.ioService = ioService;
+        this.localizedIOService = localizedIOService;
     }
 
     @Override
     public TestResult executeTestFor(Student student) {
         List<Question> questions = questionDao.getQuestions();
         var testResult = new TestResult(student);
-        boolean isCorrectAnswer;
+        questionsEnumeration(questions, testResult);
+        return testResult;
+    }
+
+    private void questionsEnumeration(List<Question> questions, TestResult testResult){
         for (Question question : questions) {
             String questionText = question.text();
             List<Answer> answers = question.answers();
-            ioService.printFormattedLine(questionText);
-            answers.forEach(answer -> ioService.printLine(" " + answer.text()));
-            String answerText = ioService.readStringWithPrompt("Select answer");
-            isCorrectAnswer = checkAnswer(answerText, answers);
-            testResult.applyAnswer(question, isCorrectAnswer);
+            localizedIOService.printFormattedLine(questionText);
+            answers.forEach(answer -> localizedIOService.printLine(" " + answer.text()));
+            acceptAnswer(question, testResult);
         }
-        return testResult;
+    }
+
+    private void acceptAnswer(Question question, TestResult testResult){
+        boolean isCorrectAnswer;
+        String answerText = localizedIOService.readStringWithPromptLocalized("TestService.answer.the.questions");
+        isCorrectAnswer = checkAnswer(answerText, question.answers());
+        testResult.applyAnswer(question, isCorrectAnswer);
     }
 
     private boolean checkAnswer(String answerText, List<Answer> answers) {

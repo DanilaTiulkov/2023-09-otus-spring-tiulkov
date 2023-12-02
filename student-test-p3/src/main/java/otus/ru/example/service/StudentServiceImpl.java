@@ -7,17 +7,17 @@ import otus.ru.example.domain.Student;
 @Service("studentService")
 public class StudentServiceImpl implements StudentService {
 
-    private final IOService ioService;
+    private final LocalizedIOService localizedIOService;
 
     @Autowired
-    public StudentServiceImpl(IOService ioService) {
-        this.ioService = ioService;
+    public StudentServiceImpl(LocalizedIOService localizedIOService) {
+        this.localizedIOService = localizedIOService;
     }
 
     @Override
     public Student determineCurrentStudent() {
-        var firstname = ioService.readStringWithPrompt("Please input your first name");
-        var lastname = ioService.readStringWithPrompt("Please input your last name");
+        var firstname = localizedIOService.readStringWithPromptLocalized("StudentService.input.first.name");
+        var lastname = localizedIOService.readStringWithPromptLocalized("StudentService.input.last.name");
         return new Student(firstname, lastname);
     }
 }

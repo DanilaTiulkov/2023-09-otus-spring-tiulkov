@@ -7,13 +7,13 @@ import otus.ru.example.domain.TestResult;
 @Service("resultService")
 public class ResultServiceImpl implements ResultService {
 
-    private final IOService ioService;
+    private final LocalizedIOService localizedIOService;
 
     private final TestConfig testConfig;
 
-    public ResultServiceImpl(TestConfig testConfig, IOService ioService) {
+    public ResultServiceImpl(TestConfig testConfig, LocalizedIOService localizedIOService) {
         this.testConfig = testConfig;
-        this.ioService = ioService;
+        this.localizedIOService = localizedIOService;
     }
 
     @Override
@@ -22,15 +22,17 @@ public class ResultServiceImpl implements ResultService {
         int result = testResult.getRightAnswerCount();
         int answeredQuestionsCount = testResult.getAnsweredQuestions().size();
         int rightAnswerCountToPass = testConfig.getRightAnswerCountToPass();
-        ioService.printFormattedLine("Student: %s", studentName);
-        ioService.printFormattedLine("Answered questions count: %d", answeredQuestionsCount);
-        ioService.printFormattedLine("Result is: %d", result);
-        ioService.printFormattedLine("Right answer count to pass: %d", rightAnswerCountToPass);
+        localizedIOService.printLineLocalized("ResultServise.test.results");
+        localizedIOService.printFormatedLineLocalized("ResultService.student", studentName);
+        localizedIOService.printFormatedLineLocalized("ResultService.answered.questions.count", answeredQuestionsCount);
+        localizedIOService.printFormatedLineLocalized("ResultService.result.is", result);
+        localizedIOService.printFormatedLineLocalized("ResultService.right.answer.count.to.pass",
+                                                  rightAnswerCountToPass);
 
         if (result >= rightAnswerCountToPass) {
-            ioService.printLine("Congratulation! You passed the test!");
+            localizedIOService.printLineLocalized("ResultService.passed.test");
             return;
         }
-        ioService.printLine("Sorry. You fail the test.");
+        localizedIOService.printLineLocalized("ResultService.fail.test");
     }
 }

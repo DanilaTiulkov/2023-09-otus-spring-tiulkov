@@ -1,32 +1,48 @@
 package otus.ru.example.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.bind.ConstructorBinding;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-@Configuration
-@ComponentScan("otus.ru.example")// Какая разница между аннотациями в этом классе, этой же аннотацией, но над классом Main?
-@PropertySource("classpath:application.properties")
-public class AppConfig implements TestConfig, TestFileNameProvider { // Зачем использовать два интерфейса, если все данные можно поместить в TestConfig?
+import java.util.Locale;
+import java.util.Map;
 
-    private final int rightAnswerCountToPass;
 
-    private final String testFileName;
+@ConfigurationProperties (prefix = "test")
+public class AppConfig implements TestConfig, TestFileNameProvider, LocaleConfig {
 
-    public AppConfig(@Value("${test.rightAnswersCountToPass}") int rightAnswerCountToPass,
-                     @Value("${test.fileName}") String testFileName) {
-        this.rightAnswerCountToPass = rightAnswerCountToPass;
-        this.testFileName = testFileName;
+    private final int rightAnswersCountToPass;
+
+    private final Locale locale;
+
+    private final Map<String, String> fileNameByLocaleTag;
+
+    @ConstructorBinding
+    public AppConfig(@Value("${test.rightAnswersCountToPass}") int rightAnswersCountToPass,
+                     @Value("${test.locale}") String locale,
+                     @Value("{test.fileNameByLocaleTag}") Map<String, String> fileNameByLocaleTag) {
+        this.rightAnswersCountToPass = rightAnswersCountToPass;
+        this.locale = Locale.forLanguageTag(locale);
+        this.fileNameByLocaleTag = fileNameByLocaleTag;
+    }
+
+    @Override
+    public Locale getLocale() {
+        return locale;
     }
 
     @Override
     public int getRightAnswerCountToPass() {
-        return rightAnswerCountToPass;
+        return rightAnswersCountToPass;
     }
 
     @Override
     public String getTestFileName() {
-        return testFileName;
+        return fileNameByLocaleTag.get(locale.toLanguageTag());
     }
 }

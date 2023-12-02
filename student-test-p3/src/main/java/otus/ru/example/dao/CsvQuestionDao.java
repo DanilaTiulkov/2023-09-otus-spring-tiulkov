@@ -2,6 +2,7 @@ package otus.ru.example.dao;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import otus.ru.example.config.TestFileNameProvider;
 import otus.ru.example.dao.dto.QuestionDto;
@@ -9,21 +10,19 @@ import otus.ru.example.domain.Answer;
 import otus.ru.example.exceptions.QuestionReadException;
 import otus.ru.example.domain.Question;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 @Repository("questionDao")
-public class QuestionDaoImpl implements QuestionDao {
+public class CsvQuestionDao implements QuestionDao {
 
     private final TestFileNameProvider testFileNameProvider;
 
-    public QuestionDaoImpl(TestFileNameProvider testFileNameProvider) {
+    @Autowired
+    public CsvQuestionDao(TestFileNameProvider testFileNameProvider) {
         this.testFileNameProvider = testFileNameProvider;
     }
 
@@ -43,7 +42,7 @@ public class QuestionDaoImpl implements QuestionDao {
             Iterator<QuestionDto> iterator = csvToBean.iterator();
             List<Question> questions = questionsDtoToQuestions(iterator);
             return questions;
-        } catch (IOException ex) {
+        } catch (IOException | NullPointerException ex) {
             throw new QuestionReadException(ex.getMessage(), ex);
         }
     }
