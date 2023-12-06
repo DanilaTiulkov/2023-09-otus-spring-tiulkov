@@ -8,9 +8,9 @@ import otus.ru.example.config.LocaleConfig;
 @Service("localizedMessagesService")
 public class LocalizedMessagesServiceImpl implements LocalizedMessagesService {
 
-    LocaleConfig localeConfig;
+    private final LocaleConfig localeConfig;
 
-    MessageSource messageSource;
+    private final MessageSource messageSource;
 
     @Autowired
     public LocalizedMessagesServiceImpl(LocaleConfig localeConfig, MessageSource messageSource) {
