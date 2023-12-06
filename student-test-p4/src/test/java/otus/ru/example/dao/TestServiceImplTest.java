@@ -4,29 +4,30 @@ package otus.ru.example.dao;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import otus.ru.example.domain.Answer;
 import otus.ru.example.domain.Question;
 import otus.ru.example.domain.Student;
 import otus.ru.example.domain.TestResult;
 import otus.ru.example.service.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 class TestServiceImplTest {
 
-    @Mock
+    @MockBean
     private LocalizedIOService localizedIOService;
-    @Mock
+
+    @MockBean
     private QuestionDao questionDao;
 
-    @InjectMocks
+    @Autowired
     private TestServiceImpl testService;
 
 

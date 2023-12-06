@@ -32,7 +32,7 @@ public class TestServiceImpl implements TestService {
         return testResult;
     }
 
-    private void questionsEnumeration(List<Question> questions, TestResult testResult){
+    private void questionsEnumeration(List<Question> questions, TestResult testResult) {
         for (Question question : questions) {
             String questionText = question.text();
             List<Answer> answers = question.answers();
@@ -42,7 +42,7 @@ public class TestServiceImpl implements TestService {
         }
     }
 
-    private void acceptAnswer(Question question, TestResult testResult){
+    private void acceptAnswer(Question question, TestResult testResult) {
         boolean isCorrectAnswer;
         String answerText = localizedIOService.readStringWithPromptLocalized("TestService.answer.the.questions");
         isCorrectAnswer = checkAnswer(answerText, question.answers());

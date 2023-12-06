@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 @Service("localizedIOServiceImpl")
 public class LocalizedIOServiceImpl implements LocalizedIOService {
 
-    IOService ioService;
+    private final IOService ioService;
 
-    LocalizedMessagesService localizedMessagesService;
+    private final LocalizedMessagesService localizedMessagesService;
 
     public LocalizedIOServiceImpl(@Qualifier("streamIoService") IOService ioService,
                                   LocalizedMessagesService localizedMessagesService) {
