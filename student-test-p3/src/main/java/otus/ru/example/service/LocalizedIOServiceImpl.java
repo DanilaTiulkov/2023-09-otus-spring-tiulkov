@@ -53,6 +53,6 @@ public class LocalizedIOServiceImpl implements LocalizedIOService {
 
     @Override
     public String getMessage(String code, Object... args) {
-        return null;
+        return localizedMessagesService.getMessage(code, args);
     }
 }
