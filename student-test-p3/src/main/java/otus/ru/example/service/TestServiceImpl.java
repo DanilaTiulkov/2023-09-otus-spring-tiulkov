@@ -43,9 +43,8 @@ public class TestServiceImpl implements TestService {
     }
 
     private void acceptAnswer(Question question, TestResult testResult) {
-        boolean isCorrectAnswer;
         String answerText = localizedIOService.readStringWithPromptLocalized("TestService.answer.the.questions");
-        isCorrectAnswer = checkAnswer(answerText, question.answers());
+        boolean isCorrectAnswer = checkAnswer(answerText, question.answers());
         testResult.applyAnswer(question, isCorrectAnswer);
     }
 
