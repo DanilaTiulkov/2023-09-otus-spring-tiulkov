@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import ru.otus.example.dao.JdbcAuthorDao;
 import ru.otus.example.dao.JdbcBookDao;
@@ -15,6 +17,7 @@ import ru.otus.example.models.Book;
 import ru.otus.example.models.Genre;
 import ru.otus.example.services.BookServiceImpl;
 import java.util.List;
+import java.util.Optional;
 
 @JdbcTest
 @Import({JdbcBookDao.class, BookServiceImpl.class, JdbcAuthorDao.class, JdbcGenreDao.class})
@@ -24,9 +27,9 @@ public class JdbcBookDaoTest {
     private JdbcBookDao bookDao;
     @Autowired
     private BookServiceImpl bookService;
-    @Autowired
+    @MockBean
     private JdbcGenreDao jdbcGenreDao;
-    @Autowired
+    @MockBean
     private JdbcAuthorDao jdbcAuthorDao;
 
 
@@ -74,7 +77,13 @@ public class JdbcBookDaoTest {
     public void updateBook() {
         Author author = new Author(1, "Иван Сергеевич");
         Genre genre = new Genre(1, "Фантастика");
+        Optional<Author> authorOptional = Optional.of(author);
+        Optional<Genre> genreOptional = Optional.of(genre);
         Book expectingBook = new Book(1, "Писатель", author, genre);
+
+        Mockito.when(jdbcAuthorDao.findById(1)).thenReturn(authorOptional);
+        Mockito.when(jdbcGenreDao.findById(1)).thenReturn(genreOptional);
+
         Book book = bookService.update(1, "Писатель", 1, 1);
         Assertions.assertEquals(expectingBook, book);
     }
@@ -84,7 +93,13 @@ public class JdbcBookDaoTest {
     public void createBook() {
         Author author = new Author(2, "Илья Абрамов");
         Genre genre = new Genre(1, "Фантастика");
+        Optional<Author> authorOptional = Optional.of(author);
+        Optional<Genre> genreOptional = Optional.of(genre);
         Book expectingBook = new Book(4, "Четвертая книга", author, genre);
+
+        Mockito.when(jdbcAuthorDao.findById(2)).thenReturn(authorOptional);
+        Mockito.when(jdbcGenreDao.findById(1)).thenReturn(genreOptional);
+
         Book book = bookService.insert("Четвертая книга", 2, 1);
         Assertions.assertEquals(expectingBook, book);
     }

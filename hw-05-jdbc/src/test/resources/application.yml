@@ -7,6 +7,6 @@ spring:
       mode: always
       data-locations: data.sql
       schema-locations: schema.sql
-  shell:
+  shell: #Почему тесты срабатывают и без отключения shell
     interactive:
       enabled: false
