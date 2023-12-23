@@ -6,7 +6,6 @@ import ru.otus.example.dao.JdbcAuthorDao;
 import ru.otus.example.models.Author;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service("authorService")
 public class AuthorServiceImpl implements  AuthorService {

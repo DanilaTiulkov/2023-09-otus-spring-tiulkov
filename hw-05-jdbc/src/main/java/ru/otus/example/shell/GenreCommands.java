@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import ru.otus.example.converters.GenreConverter;
-import ru.otus.example.dao.JdbcGenreDao;
 import ru.otus.example.services.GenreService;
 
 import java.util.stream.Collectors;
@@ -12,8 +11,9 @@ import java.util.stream.Collectors;
 @ShellComponent
 public class GenreCommands {
 
-    GenreService genreService;
-    GenreConverter genreConverter;
+    private GenreService genreService;
+
+    private GenreConverter genreConverter;
 
     @Autowired
     public GenreCommands(GenreService genreService, GenreConverter genreConverter) {

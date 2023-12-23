@@ -5,6 +5,7 @@ import java.util.Objects;
 public class Genre {
 
     private long genreId;
+
     private String genreName;
 
     public Genre(long genreId, String genreName) {
@@ -30,8 +31,12 @@ public class Genre {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Genre genre = (Genre) o;
         return genreId == genre.genreId && Objects.equals(genreName, genre.genreName);
     }

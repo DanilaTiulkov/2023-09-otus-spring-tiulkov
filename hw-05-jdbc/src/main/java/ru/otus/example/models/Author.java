@@ -5,6 +5,7 @@ import java.util.Objects;
 public class Author {
 
     private long authorId;
+
     private String fullName;
 
     public Author(long authorId, String fullName) {
@@ -30,8 +31,12 @@ public class Author {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Author author = (Author) o;
         return authorId == author.authorId && Objects.equals(fullName, author.fullName);
     }

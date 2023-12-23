@@ -11,8 +11,9 @@ import java.util.stream.Collectors;
 @ShellComponent
 public class AuthorCommands {
 
-    AuthorService authorService;
-    AuthorConverter authorConverter;
+    private AuthorService authorService;
+
+    private AuthorConverter authorConverter;
 
     @Autowired
     public AuthorCommands(AuthorService authorService, AuthorConverter authorConverter) {

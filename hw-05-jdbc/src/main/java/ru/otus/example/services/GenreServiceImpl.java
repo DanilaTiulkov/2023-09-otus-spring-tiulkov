@@ -6,7 +6,6 @@ import ru.otus.example.dao.JdbcGenreDao;
 import ru.otus.example.models.Genre;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service("genreService")
 public class GenreServiceImpl implements GenreService {

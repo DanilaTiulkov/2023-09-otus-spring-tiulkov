@@ -35,12 +35,13 @@ public class JdbcBookDao implements BookDao {
     public Optional<Book> findById(long id) {
         Book book;
         try {
-            book = jdbcOperations.queryForObject("select book_id, title, b.author_id, full_name, g.genre_id, genre_name " +
+            book = jdbcOperations.queryForObject(
+                    "select book_id, title, b.author_id, full_name, g.genre_id, genre_name " +
                     "from Books as b " +
                     "inner join Authors as a on b.author_id = a.author_id " +
                     "inner join Genres as g on g.genre_id = b.genre_id " +
                     "where book_id = ?", new BookMapper(), id);
-        }catch (EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             book = null;
         }
         return Optional.ofNullable(book);
@@ -48,7 +49,8 @@ public class JdbcBookDao implements BookDao {
 
     @Override
     public List<Book> findAll() {
-        return jdbcOperations.query("select book_id, title, b.author_id, full_name, g.genre_id, genre_name " +
+        return jdbcOperations.query(
+                "select book_id, title, b.author_id, full_name, g.genre_id, genre_name " +
                 "from Books as b " +
                 "inner join Authors as a on b.author_id = a.author_id " +
                 "inner join Genres as g on g.genre_id = b.genre_id", new BookMapper());

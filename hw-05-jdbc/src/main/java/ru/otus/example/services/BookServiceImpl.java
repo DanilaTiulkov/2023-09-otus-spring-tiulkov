@@ -1,6 +1,5 @@
 package ru.otus.example.services;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import ru.otus.example.dao.JdbcAuthorDao;
 import ru.otus.example.dao.JdbcBookDao;
@@ -54,8 +53,10 @@ public class BookServiceImpl implements BookService {
     }
 
     public Book save(long id, String title, long authorId, long genreId) {
-        var author = jdbcAuthorDao.findById(authorId).orElseThrow(() -> new EntityNotFoundException("Author doesn't found"));
-        var genre = jdbcGenreDao.findById(genreId).orElseThrow(() -> new EntityNotFoundException("Genre doesn't found"));
+        var author = jdbcAuthorDao.findById(authorId).orElseThrow(() ->
+                new EntityNotFoundException("Author doesn't found"));
+        var genre = jdbcGenreDao.findById(genreId).orElseThrow(() ->
+                new EntityNotFoundException("Genre doesn't found"));
         var book = new Book(id, title, author, genre);
         return jdbcBookDao.save(book);
     }
