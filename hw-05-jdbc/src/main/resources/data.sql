@@ -1,4 +1,4 @@
-insert into Authors(full_name) -- Что будет если наполнять БД, которая не стирает данные после отключения приложения
+insert into Authors(full_name)
 values ('Иван Сергеевич'), ('Илья Абрамов'), ('Михаил Андреевич');
 
 insert into Genres(genre_name)
