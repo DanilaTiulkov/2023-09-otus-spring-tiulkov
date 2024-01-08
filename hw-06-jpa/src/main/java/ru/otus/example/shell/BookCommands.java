@@ -43,7 +43,7 @@ public class BookCommands {
 
     @ShellMethod(value = "Delete book", key = "bdel")
     public String deleteBook(long id) {
-        bookService.delete(id);
+        bookService.deleteById(id);
         return "Book deleted successfully";
     }
 
@@ -51,10 +51,5 @@ public class BookCommands {
     public String updateBook (long id, String title, long authorId, long genreId) {
         var book = bookService.update(id, title, authorId, genreId);
         return "Book updated successfully.\n".concat(bookConverter.bookToString(book));
-    }
-
-    @ShellMethod(key = "gc")
-    public void getComsole() throws SQLException {
-        Console.main(null);
     }
 }

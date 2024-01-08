@@ -54,7 +54,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void delete(long id) {
+    public void deleteById(long id) {
         jpaBookDao.deleteById(id);
     }
 
