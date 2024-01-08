@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 @ShellComponent
 public class GenreCommands {
 
-    private GenreService genreService;
+    private final GenreService genreService;
 
-    private GenreConverter genreConverter;
+    private final GenreConverter genreConverter;
 
     @Autowired
     public GenreCommands(GenreService genreService, GenreConverter genreConverter) {

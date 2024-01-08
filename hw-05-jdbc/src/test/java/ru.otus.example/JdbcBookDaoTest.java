@@ -46,7 +46,7 @@ public class JdbcBookDaoTest {
 
     @Test
     @DisplayName("Поиск всех книг")
-    public void findAll() { //Если есть база с большим количеством записей, как протестировать этот метод, не в ручную же добавлять каждый объект?
+    public void findAll() {
         Author firstAuthor = new Author(1, "Иван Сергеевич");
         Genre firstGenre = new Genre(1, "Фантастика");
         Book firstBook = new Book(1, "Три планеты", firstAuthor, firstGenre);
@@ -66,7 +66,7 @@ public class JdbcBookDaoTest {
         Author author = new Author(1, "Иван Сергеевич");
         Genre genre = new Genre(1, "Фантастика");
         Book deletedBook = new Book(1, "Три планеты", author, genre);
-        bookService.delete(1);
+        bookService.deleteById(1);
         List<Book> books = bookService.findAll();
         assertThat(books).doesNotContain(deletedBook);
         Assertions.assertEquals(2, books.size());

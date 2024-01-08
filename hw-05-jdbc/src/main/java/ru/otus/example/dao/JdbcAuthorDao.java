@@ -42,7 +42,7 @@ public class JdbcAuthorDao implements AuthorDao {
     }
 
 
-    private static class AuthorMapper implements RowMapper<Author> { // Почему класс должен быть статическим?
+    private static class AuthorMapper implements RowMapper<Author> {
 
         @Override
         public Author mapRow(ResultSet rs, int rowNum) throws SQLException {

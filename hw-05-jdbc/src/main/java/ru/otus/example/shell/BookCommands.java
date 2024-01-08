@@ -41,7 +41,7 @@ public class BookCommands {
 
     @ShellMethod(value = "Delete book", key = "bdel")
     public String deleteBook(long id) {
-        bookService.delete(id);
+        bookService.deleteById(id);
         return "Book deleted successfully";
     }
 

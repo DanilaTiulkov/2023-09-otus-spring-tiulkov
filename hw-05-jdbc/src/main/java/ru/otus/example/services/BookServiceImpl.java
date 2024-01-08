@@ -48,7 +48,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void delete(long id) {
+    public void deleteById(long id) {
         jdbcBookDao.deleteById(id);
     }
 
