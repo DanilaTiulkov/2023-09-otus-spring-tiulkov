@@ -1,13 +1,12 @@
 package ru.otus.example.shell;
 
-import org.h2.tools.Console;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import ru.otus.example.converters.BookConverter;
 import ru.otus.example.services.BookService;
 
-import java.sql.SQLException;
 import java.util.stream.Collectors;
 
 @ShellComponent
