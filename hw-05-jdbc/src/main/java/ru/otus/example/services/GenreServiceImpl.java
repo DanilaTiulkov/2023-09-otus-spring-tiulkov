@@ -3,7 +3,6 @@ package ru.otus.example.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.otus.example.dao.GenreDao;
-import ru.otus.example.dao.JdbcGenreDao;
 import ru.otus.example.models.Genre;
 
 import java.util.List;
