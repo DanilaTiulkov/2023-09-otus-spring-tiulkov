@@ -1,9 +1,7 @@
 package ru.otus.example.services;
 
 import org.springframework.stereotype.Service;
-import ru.otus.example.dao.JdbcAuthorDao;
-import ru.otus.example.dao.JdbcBookDao;
-import ru.otus.example.dao.JdbcGenreDao;
+import ru.otus.example.dao.*;
 import ru.otus.example.exceptions.EntityNotFoundException;
 import ru.otus.example.models.Book;
 
@@ -13,14 +11,14 @@ import java.util.Optional;
 @Service("bookService")
 public class BookServiceImpl implements BookService {
 
-    private final JdbcBookDao jdbcBookDao;
+    private final BookDao jdbcBookDao;
 
-    private final JdbcAuthorDao jdbcAuthorDao;
+    private final AuthorDao jdbcAuthorDao;
 
-    private final JdbcGenreDao jdbcGenreDao;
+    private final GenreDao jdbcGenreDao;
 
 
-    public BookServiceImpl(JdbcBookDao jdbcBookDao, JdbcAuthorDao jdbcAuthorDao, JdbcGenreDao jdbcGenreDao) {
+    public BookServiceImpl(BookDao jdbcBookDao, AuthorDao jdbcAuthorDao, GenreDao jdbcGenreDao) {
         this.jdbcBookDao = jdbcBookDao;
         this.jdbcAuthorDao = jdbcAuthorDao;
         this.jdbcGenreDao = jdbcGenreDao;

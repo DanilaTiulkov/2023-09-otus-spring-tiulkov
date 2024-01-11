@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.otus.example.models.Author;
 
@@ -17,9 +19,12 @@ public class JdbcAuthorDao implements AuthorDao {
 
     private final JdbcOperations jdbcOperations;
 
+    private final NamedParameterJdbcOperations namedParameterJdbcOperations;
+
     @Autowired
-    public JdbcAuthorDao(JdbcOperations jdbcOperations) {
-        this.jdbcOperations = jdbcOperations;
+    public JdbcAuthorDao(NamedParameterJdbcOperations namedParameterJdbcOperations) {
+        this.namedParameterJdbcOperations = namedParameterJdbcOperations;
+        this.jdbcOperations = namedParameterJdbcOperations.getJdbcOperations();
     }
 
     @Override
@@ -31,10 +36,12 @@ public class JdbcAuthorDao implements AuthorDao {
     public Optional<Author> findById(long id) {
         Author author;
         try {
-            author = jdbcOperations.queryForObject("select author_id, full_name " +
+            var params = new MapSqlParameterSource();
+            params.addValue("authorId", id);
+            author = namedParameterJdbcOperations.queryForObject("select author_id, full_name " +
                             "from Authors " +
-                            "where author_id = ?",
-                    new AuthorMapper(), id);
+                            "where author_id = :authorId",
+                             params, new AuthorMapper());
         } catch (EmptyResultDataAccessException e) {
             author = null;
         }

@@ -35,12 +35,14 @@ public class JdbcBookDao implements BookDao {
     public Optional<Book> findById(long id) {
         Book book;
         try {
-            book = jdbcOperations.queryForObject(
+            var params = new MapSqlParameterSource();
+            params.addValue("bookId", id);
+            book = namedParameterJdbcOperations.queryForObject(
                     "select book_id, title, b.author_id, full_name, g.genre_id, genre_name " +
                     "from Books as b " +
                     "inner join Authors as a on b.author_id = a.author_id " +
                     "inner join Genres as g on g.genre_id = b.genre_id " +
-                    "where book_id = ?", new BookMapper(), id);
+                    "where book_id = :bookId", params, new BookMapper());
         } catch (EmptyResultDataAccessException e) {
             book = null;
         }
@@ -66,7 +68,9 @@ public class JdbcBookDao implements BookDao {
 
     @Override
     public void deleteById(long id) {
-        jdbcOperations.update("delete from Books where book_id = ?", id);
+        var params = new MapSqlParameterSource();
+        params.addValue("bookId", id);
+        namedParameterJdbcOperations.update("delete from Books where book_id = :bookId", params);
     }
 
     private Book insert(Book book) {
@@ -75,9 +79,6 @@ public class JdbcBookDao implements BookDao {
         params.addValue("title", book.getTitle());
         params.addValue("author_id", book.getAuthor().getAuthorId());
         params.addValue("genre_id", book.getGenre().getGenreId());
-        String title = book.getTitle();
-        long authorId = book.getAuthor().getAuthorId();
-        long genreId = book.getGenre().getGenreId();
         namedParameterJdbcOperations.update("insert into Books(title, author_id, genre_id) " +
                 "values(:title, :author_id, :genre_id)",params, keyholder);
         long key = keyholder.getKey().longValue();
@@ -86,13 +87,14 @@ public class JdbcBookDao implements BookDao {
     }
 
     private Book update(Book book) {
-        long bookId = book.getBookId();
-        String title = book.getTitle();
-        long authorId = book.getAuthor().getAuthorId();
-        long genreId = book.getGenre().getGenreId();
-        jdbcOperations.update("update Books " +
-                "set title = ?,author_id = ?,genre_id = ?" +
-                "where book_id = ?", title, authorId, genreId, bookId);
+        var params = new MapSqlParameterSource();
+        params.addValue("bookId", book.getBookId());
+        params.addValue("title", book.getTitle());
+        params.addValue("authorId", book.getAuthor().getAuthorId());
+        params.addValue("genreId", book.getGenre().getGenreId());
+        namedParameterJdbcOperations.update("update Books " +
+                "set title = :title,author_id = :authorId,genre_id = :genreId " +
+                "where book_id = :bookId", params);
         return book;
     }
 

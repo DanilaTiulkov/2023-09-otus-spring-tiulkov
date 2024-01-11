@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.stereotype.Repository;
 import ru.otus.example.models.Genre;
 
@@ -17,9 +19,12 @@ public class JdbcGenreDao implements GenreDao {
 
     private final JdbcOperations jdbcOperations;
 
+    private final NamedParameterJdbcOperations namedParameterJdbcOperations;
+
     @Autowired
-    public JdbcGenreDao(JdbcOperations jdbcOperations) {
-        this.jdbcOperations = jdbcOperations;
+    public JdbcGenreDao(NamedParameterJdbcOperations namedParameterJdbcOperations) {
+        this.namedParameterJdbcOperations = namedParameterJdbcOperations;
+        this.jdbcOperations = namedParameterJdbcOperations.getJdbcOperations();
     }
 
     @Override
@@ -31,10 +36,12 @@ public class JdbcGenreDao implements GenreDao {
     public Optional<Genre> findById(long id) {
         Genre genre;
         try {
-            genre = jdbcOperations.queryForObject("select genre_id, genre_name " +
+            var params = new MapSqlParameterSource();
+            params.addValue("genreId", id);
+            genre = namedParameterJdbcOperations.queryForObject("select genre_id, genre_name " +
                             "from Genres " +
-                            "where genre_id = ?",
-                    new GenreMapper(), id);
+                            "where genre_id = :genreId",
+                             params, new GenreMapper());
         } catch (EmptyResultDataAccessException e) {
             genre = null;
         }
