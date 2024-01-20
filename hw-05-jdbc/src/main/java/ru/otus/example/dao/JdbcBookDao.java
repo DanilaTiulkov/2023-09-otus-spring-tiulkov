@@ -92,9 +92,12 @@ public class JdbcBookDao implements BookDao {
         params.addValue("title", book.getTitle());
         params.addValue("authorId", book.getAuthor().getAuthorId());
         params.addValue("genreId", book.getGenre().getGenreId());
-        namedParameterJdbcOperations.update("update Books " +
+        namedParameterJdbcOperations.update(
+                "IF (select book_id from Books where book_id = :bookId) > 0 " +
+                "BEGIN " +
+                "update Books " +
                 "set title = :title,author_id = :authorId,genre_id = :genreId " +
-                "where book_id = :bookId", params);
+                "END", params);
         return book;
     }
 

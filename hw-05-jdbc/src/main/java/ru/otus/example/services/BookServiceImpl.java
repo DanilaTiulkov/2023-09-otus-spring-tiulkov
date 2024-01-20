@@ -11,27 +11,27 @@ import java.util.Optional;
 @Service("bookService")
 public class BookServiceImpl implements BookService {
 
-    private final BookDao jdbcBookDao;
+    private final BookDao bookDao;
 
-    private final AuthorDao jdbcAuthorDao;
+    private final AuthorDao authorDao;
 
-    private final GenreDao jdbcGenreDao;
+    private final GenreDao genreDao;
 
 
-    public BookServiceImpl(BookDao jdbcBookDao, AuthorDao jdbcAuthorDao, GenreDao jdbcGenreDao) {
-        this.jdbcBookDao = jdbcBookDao;
-        this.jdbcAuthorDao = jdbcAuthorDao;
-        this.jdbcGenreDao = jdbcGenreDao;
+    public BookServiceImpl(BookDao bookDao, AuthorDao authorDao, GenreDao genreDao) {
+        this.bookDao = bookDao;
+        this.authorDao = authorDao;
+        this.genreDao = genreDao;
     }
 
     @Override
     public Optional<Book> findById(long id) {
-        return jdbcBookDao.findById(id);
+        return bookDao.findById(id);
     }
 
     @Override
     public List<Book> findAll() {
-        return jdbcBookDao.findAll();
+        return bookDao.findAll();
     }
 
     @Override
@@ -41,21 +41,21 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book update(long id, String title, long authorId, long genreId) {
-        jdbcBookDao.findById(id).orElseThrow(() -> new EntityNotFoundException("Book doesn't found"));
+        bookDao.findById(id).orElseThrow(() -> new EntityNotFoundException("Book doesn't found"));
         return save(id, title, authorId, genreId);
     }
 
     @Override
     public void deleteById(long id) {
-        jdbcBookDao.deleteById(id);
+        bookDao.deleteById(id);
     }
 
     public Book save(long id, String title, long authorId, long genreId) {
-        var author = jdbcAuthorDao.findById(authorId).orElseThrow(() ->
+        var author = authorDao.findById(authorId).orElseThrow(() ->
                 new EntityNotFoundException("Author doesn't found"));
-        var genre = jdbcGenreDao.findById(genreId).orElseThrow(() ->
+        var genre = genreDao.findById(genreId).orElseThrow(() ->
                 new EntityNotFoundException("Genre doesn't found"));
         var book = new Book(id, title, author, genre);
-        return jdbcBookDao.save(book);
+        return bookDao.save(book);
     }
 }

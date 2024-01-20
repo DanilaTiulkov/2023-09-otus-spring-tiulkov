@@ -10,16 +10,16 @@ import java.util.List;
 @Service("genreService")
 public class GenreServiceImpl implements GenreService {
 
-    private final GenreDao jdbcGenreDao;
+    private final GenreDao genreDao;
 
     @Autowired
     public GenreServiceImpl(GenreDao jdbcGenreDao) {
-        this.jdbcGenreDao = jdbcGenreDao;
+        this.genreDao = jdbcGenreDao;
     }
 
     @Override
     public List<Genre> findAll() {
-        return jdbcGenreDao.findAll();
+        return genreDao.findAll();
     }
 
 }

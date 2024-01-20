@@ -10,15 +10,15 @@ import java.util.List;
 @Service("authorService")
 public class AuthorServiceImpl implements  AuthorService {
 
-    private final AuthorDao jdbcAuthorDao;
+    private final AuthorDao authorDao;
 
     @Autowired
     public AuthorServiceImpl(AuthorDao jdbcAuthorDao) {
-        this.jdbcAuthorDao = jdbcAuthorDao;
+        this.authorDao = jdbcAuthorDao;
     }
 
     @Override
     public List<Author> findAllAuthors() {
-        return jdbcAuthorDao.findAllAuthors();
+        return authorDao.findAllAuthors();
     }
 }
