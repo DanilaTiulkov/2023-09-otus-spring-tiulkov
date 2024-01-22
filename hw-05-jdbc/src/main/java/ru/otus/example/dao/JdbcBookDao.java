@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.otus.example.exceptions.EntityNotFoundException;
 import ru.otus.example.models.Author;
 import ru.otus.example.models.Book;
 import ru.otus.example.models.Genre;
@@ -92,13 +93,16 @@ public class JdbcBookDao implements BookDao {
         params.addValue("title", book.getTitle());
         params.addValue("authorId", book.getAuthor().getAuthorId());
         params.addValue("genreId", book.getGenre().getGenreId());
-        namedParameterJdbcOperations.update(
-                "IF (select book_id from Books where book_id = :bookId) > 0 " +
-                "BEGIN " +
-                "update Books " +
-                "set title = :title,author_id = :authorId,genre_id = :genreId " +
-                "END", params);
-        return book;
+        int updatedCount = namedParameterJdbcOperations.update("update Books " +
+                "set title = :title," +
+                "author_id = :authorId," +
+                "genre_id = :genreId " +
+                "where book_id = :bookId", params);
+        if (updatedCount == 0) {
+            throw new EntityNotFoundException("The book is not updated");
+        } else {
+            return book;
+        }
     }
 
 
