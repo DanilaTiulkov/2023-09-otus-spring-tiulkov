@@ -5,11 +5,11 @@ import otus.ru.example.domain.Question;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-class QuestionDaoImplTest {
+class CsvQuestionDaoTest {
     @DisplayName("Проверка количества вопросов внутри коллекции result")
     @Test
     void getQuestions() {
-        QuestionDaoImpl qdi = new QuestionDaoImpl("QuestionsTest.csv");
+        CsvQuestionDao qdi = new CsvQuestionDaoTest("QuestionsTest.csv");
         List<Question> result = qdi.getQuestions();
         assertEquals(5, result.size());
     }
