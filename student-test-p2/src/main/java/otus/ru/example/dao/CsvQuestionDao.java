@@ -2,8 +2,6 @@ package otus.ru.example.dao;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
 import otus.ru.example.config.TestFileNameProvider;
 import otus.ru.example.dao.dto.QuestionDto;
@@ -21,11 +19,11 @@ import java.util.Iterator;
 import java.util.List;
 
 @Repository("questionDao")
-public class QuestionDaoImpl implements QuestionDao {
+public class CsvQuestionDao implements QuestionDao {
 
     private final TestFileNameProvider testFileNameProvider;
 
-    public QuestionDaoImpl(TestFileNameProvider testFileNameProvider) {
+    public CsvQuestionDao(TestFileNameProvider testFileNameProvider) {
         this.testFileNameProvider = testFileNameProvider;
     }
 
@@ -45,7 +43,7 @@ public class QuestionDaoImpl implements QuestionDao {
             Iterator<QuestionDto> iterator = csvToBean.iterator();
             List<Question> questions = questionsDtoToQuestions(iterator);
             return questions;
-        } catch (IOException ex) {
+        } catch (IOException | NullPointerException ex) {
             throw new QuestionReadException(ex.getMessage(), ex);
         }
     }

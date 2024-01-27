@@ -1,14 +1,10 @@
 package otus.ru.example.config;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
-@Configuration
-@ComponentScan("otus.ru.example")// Какая разница между аннотациями в этом классе, этой же аннотацией, но над классом Main?
-@PropertySource("classpath:application.properties")
-public class AppConfig implements TestConfig, TestFileNameProvider{ // Зачем использовать два интерфейса, если все данные можно поместить в TestConfig?
+@Component
+public class AppConfig implements TestConfig, TestFileNameProvider {
 
     private final int rightAnswerCountToPass;
 

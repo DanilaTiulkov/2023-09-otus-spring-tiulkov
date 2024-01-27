@@ -5,7 +5,7 @@ import otus.ru.example.config.TestConfig;
 import otus.ru.example.domain.TestResult;
 
 @Service("resultService")
-public class ResultServiceImpl implements ResultService{
+public class ResultServiceImpl implements ResultService {
 
     private final IOService ioService;
 
@@ -24,7 +24,7 @@ public class ResultServiceImpl implements ResultService{
         int rightAnswerCountToPass = testConfig.getRightAnswerCountToPass();
         ioService.printFormattedLine("Student: %s", studentName);
         ioService.printFormattedLine("Answered questions count: %d", answeredQuestionsCount);
-        ioService.printFormattedLine( "Result is: %d", result);
+        ioService.printFormattedLine("Result is: %d", result);
         ioService.printFormattedLine("Right answer count to pass: %d", rightAnswerCountToPass);
 
         if (result >= rightAnswerCountToPass) {

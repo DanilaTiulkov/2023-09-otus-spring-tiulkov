@@ -28,17 +28,25 @@ public class TestServiceImpl implements TestService {
     public TestResult executeTestFor(Student student) {
         List<Question> questions = questionDao.getQuestions();
         var testResult = new TestResult(student);
-        boolean isCorrectAnswer;
+        questionsEnumeration(questions, testResult);
+        return testResult;
+    }
+
+    private void questionsEnumeration(List<Question> questions, TestResult testResult) {
         for (Question question : questions) {
             String questionText = question.text();
             List<Answer> answers = question.answers();
             ioService.printFormattedLine(questionText);
             answers.forEach(answer -> ioService.printLine(" " + answer.text()));
-            String answerText = ioService.readStringWithPrompt("Select answer");
-            isCorrectAnswer = checkAnswer(answerText, answers);
-            testResult.applyAnswer(question, isCorrectAnswer);
+            acceptAnswer(question, testResult);
         }
-        return testResult;
+    }
+
+    private void acceptAnswer(Question question, TestResult testResult) {
+        boolean isCorrectAnswer;
+        String answerText = ioService.readStringWithPrompt("Select answer");
+        isCorrectAnswer = checkAnswer(answerText, question.answers());
+        testResult.applyAnswer(question, isCorrectAnswer);
     }
 
     private boolean checkAnswer(String answerText, List<Answer> answers) {

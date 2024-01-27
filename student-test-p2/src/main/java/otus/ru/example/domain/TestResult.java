@@ -18,7 +18,7 @@ public class TestResult {
 
     public void applyAnswer(Question question, boolean isRightAnswer) {
         answeredQuestions.add(question);
-        if(isRightAnswer) {
+        if (isRightAnswer) {
             rightAnswerCount++;
         }
     }

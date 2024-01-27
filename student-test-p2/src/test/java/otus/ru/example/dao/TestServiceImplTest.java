@@ -20,12 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
 @ExtendWith(MockitoExtension.class)
 class TestServiceImplTest {
 
     @Mock
-    private StreamsIOService ioService; //Если я указываю экземпляр StreamsIOService, то тут создается объект с пустыми параметрамис коснтруктора, а если указываю интерфейс, то создается Mock, но при этом программа работает в обоих случаях
+    private IOService ioService;
     @Mock
     private QuestionDao questionDao;
 
