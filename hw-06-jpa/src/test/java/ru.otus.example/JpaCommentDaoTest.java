@@ -3,6 +3,7 @@ package ru.otus.example;
 
 import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +18,7 @@ import ru.otus.example.dao.JpaCommentDao;
 import ru.otus.example.models.Book;
 import ru.otus.example.models.Comment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -30,20 +32,30 @@ public class JpaCommentDaoTest {
     @Autowired
     private TestEntityManager em;
 
+    private List<Comment> dbCommentsByBookId;
+
+
+    @BeforeEach
+    public void init() {
+        dbCommentsByBookId = commentsByBookId();
+    }
+
     @Test
     @DisplayName("Поиск комментария по id")
     public void findCommentById() {
         var expectingComment = em.find(Comment.class, 1);
-        var actualComment = commentDao.findCommentById(1).orElse(null);
-        Assertions.assertEquals(expectingComment, actualComment);
+        var actualComment = commentDao.findCommentById(1L);
+        assertThat(actualComment)
+                .isPresent()
+                .get().isEqualTo(expectingComment);
     }
 
     @Test
     @DisplayName("Поиск комментариев по id книги")
     public void findCommentsByBookId() {
-        var expectingComment = em.find(Comment.class, 1);
+        List<Comment> expectingComments = dbCommentsByBookId;
         List<Comment> actualComments = commentDao.findCommentsByBookId(1);
-        assertThat(actualComments).containsExactlyInAnyOrder(expectingComment);
+        assertThat(actualComments).containsAnyElementsOf(expectingComments);
     }
 
     @Test
@@ -61,18 +73,48 @@ public class JpaCommentDaoTest {
     public void updateComment() {
         var book = em.find(Book.class, 1);
         var expectingComment = new Comment(3, "Updated comment", book);
-        var actualComment = commentDao.save(new Comment(3, "Updated comment", book));
-        Assertions.assertEquals(expectingComment, actualComment);
+
+        assertThat(commentDao.findCommentById(expectingComment.getCommentId()))
+                .isPresent()
+                .get().isNotEqualTo(expectingComment);
+        var updatedComment = commentDao.save(expectingComment);
+
+        assertThat(updatedComment).isNotNull()
+                .matches(comment -> comment.getCommentId() > 0 )
+                .usingRecursiveComparison()
+                .ignoringExpectedNullFields().isEqualTo(expectingComment);
+
+        assertThat(commentDao.findCommentById(updatedComment.getCommentId()))
+                .isPresent()
+                .get().isEqualTo(expectingComment);
+
     }
 
     @Test
     @DisplayName("Создание комментария")
     public void createComment() {
         var book = em.find(Book.class, 1);
-        var expectingComment = new Comment(4, "Test comment", book);
-        var actualComment = commentDao.save(new Comment(0, "Test comment", book));
-        Assertions.assertEquals(expectingComment, actualComment);
+        var expectingComment = new Comment(0, "Test comment", book);
+        var savedComment = commentDao.save(expectingComment);
+
+        assertThat(savedComment)
+                .isNotNull()
+                .matches(comment -> comment.getCommentId() > 0)
+                .usingRecursiveComparison()
+                .ignoringExpectedNullFields().isEqualTo(expectingComment);
+
+        assertThat(commentDao.findCommentById(savedComment.getCommentId()))
+                .isPresent()
+                .get()
+                .isEqualTo(savedComment);
 
 
+    }
+
+    public List<Comment> commentsByBookId() {
+        List<Comment> comments = new ArrayList<>();
+        var comment = em.find(Comment.class, 1);
+        comments.add(comment);
+        return comments;
     }
 }

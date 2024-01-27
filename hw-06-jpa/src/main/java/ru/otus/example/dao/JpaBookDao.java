@@ -27,7 +27,7 @@ public class JpaBookDao implements BookDao {
             query.setParameter("id", id);
             query.setHint("javax.persistence.fetchgraph",entityGraph);
             book = query.getSingleResult();
-        } catch (EmptyResultDataAccessException e) {
+        } catch (NoResultException e) {
             book = null;
         }
         return Optional.ofNullable(book);

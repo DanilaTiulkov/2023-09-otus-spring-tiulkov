@@ -3,8 +3,8 @@ package ru.otus.example.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.example.dao.JpaBookDao;
-import ru.otus.example.dao.JpaCommentDao;
+import ru.otus.example.dao.BookDao;
+import ru.otus.example.dao.CommentDao;
 import ru.otus.example.exceptions.EntityNotFoundException;
 import ru.otus.example.models.Comment;
 
@@ -14,27 +14,27 @@ import java.util.Optional;
 @Service("commentService")
 public class CommentServiceImpl implements CommentService {
 
-    private final JpaCommentDao jpaCommentDao;
+    private final CommentDao commentDao;
 
-    private final JpaBookDao jpaBookDao;
+    private final BookDao bookDao;
 
 
     @Autowired
-    public CommentServiceImpl(JpaCommentDao jpaCommentDao, JpaBookDao jpaBookDao) {
-        this.jpaCommentDao = jpaCommentDao;
-        this.jpaBookDao = jpaBookDao;
+    public CommentServiceImpl(CommentDao commentDao, BookDao bookDao) {
+        this.commentDao = commentDao;
+        this.bookDao = bookDao;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Comment> findCommentsByBookId(long bookId) {
-        return jpaCommentDao.findCommentsByBookId(bookId);
+        return commentDao.findCommentsByBookId(bookId);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Comment> findCommentById(long commentId) {
-        return jpaCommentDao.findCommentById(commentId);
+        return commentDao.findCommentById(commentId);
     }
 
     @Override
@@ -53,20 +53,20 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public void deleteComment(long id) {
-        jpaCommentDao.deleteComment(id);
+        commentDao.deleteComment(id);
     }
 
     public Comment save(long id, String text, long bookId) {
         Comment comment;
         if (bookId != 0) {
-            var book = jpaBookDao.findById(bookId).orElseThrow(() ->
+            var book = bookDao.findById(bookId).orElseThrow(() ->
                     new EntityNotFoundException("Book not found"));
             comment = new Comment(id, text, book);
         } else {
-            comment = jpaCommentDao.findCommentById(id).orElseThrow(() ->
+            comment = commentDao.findCommentById(id).orElseThrow(() ->
                     new EntityNotFoundException("Comment not found"));
             comment.setcommentText(text);
         }
-        return jpaCommentDao.save(comment);
+        return commentDao.save(comment);
     }
 }

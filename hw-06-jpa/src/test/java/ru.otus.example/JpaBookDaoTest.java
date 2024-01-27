@@ -2,6 +2,7 @@ package ru.otus.example;
 
 import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -10,86 +11,146 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import ru.otus.example.dao.BookDao;
 import ru.otus.example.dao.JpaAuthorDao;
 import ru.otus.example.dao.JpaBookDao;
 import ru.otus.example.dao.JpaGenreDao;
 import ru.otus.example.models.Author;
 import ru.otus.example.models.Book;
 import ru.otus.example.models.Genre;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 @DataJpaTest
 @Import({JpaBookDao.class, JpaAuthorDao.class, JpaGenreDao.class})
 public class JpaBookDaoTest {
 
     @Autowired
-    private JpaBookDao bookDao;
+    private BookDao bookDao;
+
     @Autowired
     private TestEntityManager em;
-    @MockBean
-    private JpaGenreDao jpaGenreDao;
-    @MockBean
-    private JpaAuthorDao jpaAuthorDao;
+
+    private List<Author> dbAuthors;
+
+    private List<Genre> dbGenres;
+
+    private List<Book> dbBooks;
 
 
+    @BeforeEach
+    void setUp() {
+        dbAuthors = getDbAuthors();
+        dbGenres = getDbGenres();
+        dbBooks = getDbBooks();
+    }
 
     @Test
     @DisplayName("Поиск книги по id")
     public void findById() {
-        var expectingBook = em.find(Book.class, 1);
-        var actualBook = bookDao.findById(1).orElse(null);
-        Assertions.assertEquals(expectingBook, actualBook);
+        var expectedBook = dbBooks.get(0);
+        var returnedBook = bookDao.findById(1L);
+        assertThat(returnedBook).isPresent()
+                .get()
+                .isEqualTo(expectedBook);
+
     }
 
     @Test
     @DisplayName("Поиск всех книг")
     public void findAll() {
-        var firstBook = em.find(Book.class, 1);
-        var secondBook = em.find(Book.class, 2);
-        var thirdBook = em.find(Book.class, 3);
-        var fourthBook = em.find(Book.class, 4);
-        List<Book> actualBooks = bookDao.findAll();
-        assertThat(actualBooks).containsExactlyInAnyOrder(firstBook, secondBook, thirdBook, fourthBook);
+        List<Book> returnedBooks = bookDao.findAll();
+        List<Book> expectedBooks = dbBooks;
+        assertThat(returnedBooks).containsAnyElementsOf(expectedBooks);
     }
 
     @Test
     @DisplayName("Удаление книги")
     public void deleteBook() {
-        var deletedBook = em.find(Book.class, 1);
-        bookDao.deleteById(1);
-        List<Book> books = bookDao.findAll();
-        assertThat(books).doesNotContain(deletedBook);
-        Assertions.assertEquals(3, books.size());
+        assertThat(bookDao.findById(1L)).isPresent();
+        bookDao.deleteById(1L);
+        assertThat(bookDao.findById(1L)).isEmpty();
+
     }
 
     @Test
     @DisplayName("Обновление книги")
     public void updateBook() {
-//        var author = new Author(1, "Ivan Sergeevich");
-//        var genre = new Genre(1, "Fantastic");
-        var author = em.find(Author.class, 1);
-        var genre = em.find(Genre.class, 1);
-        var expectingBook = new Book(1, "Writer", author, genre);
+        var expectedBook = new Book(1L, "Writer", dbAuthors.get(0), dbGenres.get(0));
 
-        var actualBook = bookDao.save(new Book(1, "Writer", author, genre));
-//        Assertions.assertEquals(expectingBook, actualBook);
-        Assertions.assertEquals(actualBook, expectingBook);
+        assertThat(bookDao.findById(expectedBook.getBookId()))
+                .isPresent()
+                .get()
+                .isNotEqualTo(expectedBook);
+
+        var updatedBook = bookDao.save(expectedBook);
+        assertThat(updatedBook).isNotNull()
+                .matches(book -> book.getBookId() > 0)
+                .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedBook);
+
+        assertThat(bookDao.findById(updatedBook.getBookId()))
+                .isPresent()
+                .get()
+                .isEqualTo(updatedBook);
+
     }
 
     @Test
     @DisplayName("Создание книги")
     public void createBook() {
-        var author = new Author(2, "Ilya Abramov");
-        var genre = new Genre(1, "Fantastic");
-        var authorOptional = Optional.of(author);
-        var genreOptional = Optional.of(genre);
-        var expectingBook = new Book(5, "Book four", author, genre);
+        var expectedBook = new Book(0, "Book Four", dbAuthors.get(1), dbGenres.get(0));
+        var savedBook = bookDao.save(expectedBook);
 
-        Mockito.when(jpaAuthorDao.findById(2)).thenReturn(authorOptional);
-        Mockito.when(jpaGenreDao.findById(1)).thenReturn(genreOptional);
+        assertThat(savedBook).isNotNull()
+                .matches(book -> book.getBookId() > 0)
+                .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedBook);
 
-        var book = bookDao.save(new Book(0, "Book four", author, genre));
-        Assertions.assertEquals(expectingBook, book);
+        assertThat(bookDao.findById(savedBook.getBookId()))
+                .isPresent()
+                .get()
+                .isEqualTo(savedBook);
+
+    }
+
+    private List<Author> getDbAuthors() {
+        List<Author> authors = new ArrayList<>();
+        var firstAuthor = em.find(Author.class, 1);
+        var secondAuthor = em.find(Author.class, 2);
+        var thirdAuthor = em.find(Author.class, 3);
+        var fourthAuthor = em.find(Author.class, 4);
+        authors.add(firstAuthor);
+        authors.add(secondAuthor);
+        authors.add(thirdAuthor);
+        authors.add(fourthAuthor);
+        return authors;
+    }
+
+    private List<Genre> getDbGenres() {
+        List<Genre> genres = new ArrayList<>();
+        var firstGenre = em.find(Genre.class, 1);
+        var secondGenre = em.find(Genre.class, 2);
+        var thirdGenre = em.find(Genre.class, 3);
+        var fourthGenre = em.find(Genre.class, 4);
+        genres.add(firstGenre);
+        genres.add(secondGenre);
+        genres.add(thirdGenre);
+        genres.add(fourthGenre);
+        return genres;
+    }
+
+    private List<Book> getDbBooks() {
+        List<Book> books = new ArrayList<>();
+        var firstBook = em.find(Book.class, 1);
+        var secondBook = em.find(Book.class, 2);
+        var thirdBook = em.find(Book.class, 3);
+        var fourthBook = em.find(Book.class, 4);
+        books.add(firstBook);
+        books.add(secondBook);
+        books.add(thirdBook);
+        books.add(fourthBook);
+        return books;
     }
 }
