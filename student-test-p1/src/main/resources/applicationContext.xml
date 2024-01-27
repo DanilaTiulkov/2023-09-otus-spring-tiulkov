@@ -5,7 +5,7 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
     <bean id="questionDao"
-          class="otus.ru.example.dao.QuestionDaoImpl">
+          class="otus.ru.example.dao.CsvQuestionDao">
         <constructor-arg value="Questions.csv"/>
     </bean>
 
