@@ -5,7 +5,7 @@ import otus.ru.example.domain.Question;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
-class CsvQuestionDaoTest {
+class QuestionDaoImplTest {
     @DisplayName("Проверка количества вопросов внутри коллекции result")
     @Test
     void getQuestions() {
