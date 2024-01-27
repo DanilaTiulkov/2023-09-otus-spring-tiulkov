@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class QuestionDaoImpl implements QuestionDao {
+public class CsvQuestionDao implements QuestionDao {
 
     private final String fileName;
 
-    public QuestionDaoImpl(String fileName) {
+    public CsvQuestionDao(String fileName) {
         this.fileName = fileName;
     }
 
