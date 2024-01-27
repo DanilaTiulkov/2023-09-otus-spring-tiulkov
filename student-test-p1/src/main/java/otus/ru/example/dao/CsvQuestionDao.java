@@ -20,7 +20,7 @@ public class CsvQuestionDao implements QuestionDao {
 
     private final String fileName;
 
-    public QuestionDaoImpl(String fileName) {
+    public CsvQuestionDao(String fileName) {
         this.fileName = fileName;
     }
 
