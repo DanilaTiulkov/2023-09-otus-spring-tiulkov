@@ -3,6 +3,7 @@ package ru.otus.example.dao;
 import jakarta.persistence.*;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
+import ru.otus.example.exceptions.EntityNotFoundException;
 import ru.otus.example.models.Book;
 
 import java.util.List;
@@ -45,6 +46,13 @@ public class JpaBookDao implements BookDao {
         if (book.getBookId() == 0) {
             em.persist(book);
             return book;
+        }
+        try {
+            TypedQuery<Integer> query = em.createQuery("select 1 from Book b where bookId = :id", Integer.class);
+            query.setParameter("id", book.getBookId());
+            query.getSingleResult();
+        } catch (NoResultException e) {
+            throw new EntityNotFoundException("Book not found");
         }
         return em.merge(book);
     }
