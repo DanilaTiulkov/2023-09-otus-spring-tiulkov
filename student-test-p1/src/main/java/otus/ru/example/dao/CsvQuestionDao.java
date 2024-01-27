@@ -37,14 +37,14 @@ public class CsvQuestionDao implements QuestionDao {
                     .withIgnoreEmptyLine(true)
                     .build();
             Iterator<QuestionDto> iterator = csvToBean.iterator();
-            List<Question> questions = questionsIterator(iterator);
+            List<Question> questions = questionsDtoToQuestions(iterator);
             return questions;
         } catch (IOException ex) {
             throw new QuestionReadException(ex.getMessage(), ex);
         }
     }
 
-    private List<Question> questionsIterator(Iterator<QuestionDto> iterator) {
+    private List<Question> questionsDtoToQuestions(Iterator<QuestionDto> iterator) {
         List<Question> questions = new ArrayList<>();
         try {
             while (iterator.hasNext()) {
