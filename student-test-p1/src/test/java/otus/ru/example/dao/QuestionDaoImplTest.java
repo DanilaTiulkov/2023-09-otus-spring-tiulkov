@@ -9,7 +9,7 @@ class QuestionDaoImplTest {
     @DisplayName("Проверка количества вопросов внутри коллекции result")
     @Test
     void getQuestions() {
-        QuestionDaoImpl qdi = new QuestionDaoImpl("QuestionsTest.csv");
+        CsvQuestionDao qdi = new CsvQuestionDao("QuestionsTest.csv");
         List<Question> result = qdi.getQuestions();
         assertEquals(5, result.size());
     }
