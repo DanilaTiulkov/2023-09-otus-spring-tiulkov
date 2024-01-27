@@ -1,7 +1,6 @@
 package ru.otus.example.dao;
 
 import jakarta.persistence.*;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 import ru.otus.example.exceptions.EntityNotFoundException;
 import ru.otus.example.models.Book;
