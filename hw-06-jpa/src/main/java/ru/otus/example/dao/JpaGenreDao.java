@@ -13,7 +13,11 @@ import java.util.Optional;
 public class JpaGenreDao implements GenreDao {
 
     @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
+
+    public JpaGenreDao(EntityManager em) {
+        this.em = em;
+    }
 
     @Override
     public List<Genre> findAll() {
@@ -25,11 +29,7 @@ public class JpaGenreDao implements GenreDao {
     public Optional<Genre> findById(long id) {
         Genre genre;
         try {
-            TypedQuery<Genre> query = em.createQuery("select g " +
-                    "from Genre g " +
-                    "where g.genreId = :id", Genre.class);
-            query.setParameter("id", id);
-            genre = query.getSingleResult();
+            genre = em.find(Genre.class, id);
         } catch (NoResultException e) {
             genre = null;
         }

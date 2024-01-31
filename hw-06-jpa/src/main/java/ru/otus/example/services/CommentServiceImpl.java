@@ -27,8 +27,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Comment> findCommentsByBookId(long bookId) {
-        return commentDao.findCommentsByBookId(bookId);
+    public List<Comment> findCommentsByBookId(long id) {
+        var book = bookDao.findById(id)
+                .orElseThrow(() ->new EntityNotFoundException("Sorry, but this book is not in the database"));
+        return commentDao.findCommentsByBookId(book.getBookId());
     }
 
     @Override

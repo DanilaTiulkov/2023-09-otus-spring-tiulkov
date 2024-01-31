@@ -5,27 +5,29 @@ import org.springframework.stereotype.Repository;
 import ru.otus.example.exceptions.EntityNotFoundException;
 import ru.otus.example.models.Book;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository("bookDao")
 public class JpaBookDao implements BookDao {
 
     @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
+    public JpaBookDao(EntityManager em) {
+        this.em = em;
+    }
 
     @Override
     public Optional<Book> findById(long id) {
         Book book;
         try {
             EntityGraph <?> entityGraph = em.getEntityGraph("book-entity-graph");
-            TypedQuery<Book> query = em.createQuery("select b " +
-                    "from Book b " +
-                    "where bookId = :id", Book.class);
-            query.setParameter("id", id);
-            query.setHint("javax.persistence.fetchgraph",entityGraph);
-            book = query.getSingleResult();
+            Map<String,Object> properties = new HashMap<>();
+            properties.put("javax.persistence.fetchgraph",entityGraph);
+            book = em.find(Book.class, id, properties);
         } catch (NoResultException e) {
             book = null;
         }
@@ -45,13 +47,6 @@ public class JpaBookDao implements BookDao {
         if (book.getBookId() == 0) {
             em.persist(book);
             return book;
-        }
-        try {
-            TypedQuery<Integer> query = em.createQuery("select 1 from Book b where bookId = :id", Integer.class);
-            query.setParameter("id", book.getBookId());
-            query.getSingleResult();
-        } catch (NoResultException e) {
-            throw new EntityNotFoundException("Book not found");
         }
         return em.merge(book);
     }

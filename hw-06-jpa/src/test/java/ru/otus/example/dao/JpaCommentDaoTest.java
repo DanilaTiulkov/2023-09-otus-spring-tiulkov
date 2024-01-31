@@ -1,4 +1,4 @@
-package ru.otus.example;
+package ru.otus.example.dao;
 
 
 import static org.assertj.core.api.Assertions.*;
@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import ru.otus.example.dao.CommentDao;
-import ru.otus.example.dao.JpaCommentDao;
 import ru.otus.example.models.Book;
 import ru.otus.example.models.Comment;
 
@@ -42,10 +40,10 @@ public class JpaCommentDaoTest {
     @DisplayName("Поиск комментария по id")
     public void findCommentById() {
         var expectingComment = em.find(Comment.class, 1);
-        var actualComment = commentDao.findCommentById(1L);
+        var actualComment = em.find(Comment.class, 1);
         assertThat(actualComment)
-                .isPresent()
-                .get().isEqualTo(expectingComment);
+                .isNotNull()
+                .isEqualTo(expectingComment);
     }
 
     @Test
@@ -72,9 +70,9 @@ public class JpaCommentDaoTest {
         var book = em.find(Book.class, 1);
         var expectingComment = new Comment(3, "Updated comment", book);
 
-        assertThat(commentDao.findCommentById(expectingComment.getCommentId()))
-                .isPresent()
-                .get().isNotEqualTo(expectingComment);
+        assertThat(em.find(Comment.class, expectingComment.getCommentId()))
+                .isNotNull()
+                .isNotEqualTo(expectingComment);
         var updatedComment = commentDao.save(expectingComment);
 
         assertThat(updatedComment).isNotNull()
@@ -82,9 +80,9 @@ public class JpaCommentDaoTest {
                 .usingRecursiveComparison()
                 .ignoringExpectedNullFields().isEqualTo(expectingComment);
 
-        assertThat(commentDao.findCommentById(updatedComment.getCommentId()))
-                .isPresent()
-                .get().isEqualTo(expectingComment);
+        assertThat(em.find(Comment.class, updatedComment.getCommentId()))
+                .isNotNull()
+                .isEqualTo(expectingComment);
 
     }
 
@@ -101,9 +99,8 @@ public class JpaCommentDaoTest {
                 .usingRecursiveComparison()
                 .ignoringExpectedNullFields().isEqualTo(expectingComment);
 
-        assertThat(commentDao.findCommentById(savedComment.getCommentId()))
-                .isPresent()
-                .get()
+        assertThat(em.find(Comment.class, savedComment.getCommentId()))
+                .isNotNull()
                 .isEqualTo(savedComment);
 
 

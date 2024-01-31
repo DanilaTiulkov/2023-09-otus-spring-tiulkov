@@ -13,7 +13,11 @@ import java.util.Optional;
 public class JpaAuthorDao implements AuthorDao {
 
     @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
+
+    public JpaAuthorDao(EntityManager em) {
+        this.em = em;
+    }
 
     @Override
     public List<Author> findAllAuthors() {
@@ -25,11 +29,7 @@ public class JpaAuthorDao implements AuthorDao {
     public Optional<Author> findById(long id) {
         Author author;
         try {
-            TypedQuery<Author> query = em.createQuery("select a " +
-                    "from Author a " +
-                    "where a.authorId =:id", Author.class);
-            query.setParameter("id", id);
-            author = query.getSingleResult();
+            author = em.find(Author.class, id);
         } catch (NoResultException e) {
             author = null;
         }

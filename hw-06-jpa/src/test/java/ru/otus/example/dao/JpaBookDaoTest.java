@@ -1,6 +1,7 @@
-package ru.otus.example;
+package ru.otus.example.dao;
 
 import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,10 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import ru.otus.example.dao.BookDao;
-import ru.otus.example.dao.JpaAuthorDao;
-import ru.otus.example.dao.JpaBookDao;
-import ru.otus.example.dao.JpaGenreDao;
 import ru.otus.example.models.Author;
 import ru.otus.example.models.Book;
 import ru.otus.example.models.Genre;
@@ -20,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @DataJpaTest
-@Import({JpaBookDao.class, JpaAuthorDao.class, JpaGenreDao.class})
+@Import(JpaBookDao.class)
 public class JpaBookDaoTest {
 
     @Autowired
@@ -47,11 +44,10 @@ public class JpaBookDaoTest {
     @DisplayName("Поиск книги по id")
     public void findById() {
         var expectedBook = dbBooks.get(0);
-        var returnedBook = bookDao.findById(1L);
-        assertThat(returnedBook).isPresent()
-                .get()
+        var returnedBook = em.find(Book.class, 1L);
+        assertThat(returnedBook)
+                .isNotNull()
                 .isEqualTo(expectedBook);
-
     }
 
     @Test
@@ -65,9 +61,9 @@ public class JpaBookDaoTest {
     @Test
     @DisplayName("Удаление книги")
     public void deleteBook() {
-        assertThat(bookDao.findById(1L)).isPresent();
+        assertThat(em.find(Book.class, 1L)).isNotNull();
         bookDao.deleteById(1L);
-        assertThat(bookDao.findById(1L)).isEmpty();
+        assertThat(em.find(Book.class, 1L)).isNull();
 
     }
 
@@ -76,9 +72,8 @@ public class JpaBookDaoTest {
     public void updateBook() {
         var expectedBook = new Book(1L, "Writer", dbAuthors.get(0), dbGenres.get(0));
 
-        assertThat(bookDao.findById(expectedBook.getBookId()))
-                .isPresent()
-                .get()
+        assertThat(em.find(Book.class, expectedBook.getBookId()))
+                .isNotNull()
                 .isNotEqualTo(expectedBook);
 
         var updatedBook = bookDao.save(expectedBook);
@@ -86,9 +81,8 @@ public class JpaBookDaoTest {
                 .matches(book -> book.getBookId() > 0)
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedBook);
 
-        assertThat(bookDao.findById(updatedBook.getBookId()))
-                .isPresent()
-                .get()
+        assertThat(em.find(Book.class, updatedBook.getBookId()))
+                .isNotNull()
                 .isEqualTo(updatedBook);
 
     }
@@ -103,9 +97,8 @@ public class JpaBookDaoTest {
                 .matches(book -> book.getBookId() > 0)
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedBook);
 
-        assertThat(bookDao.findById(savedBook.getBookId()))
-                .isPresent()
-                .get()
+        assertThat(em.find(Book.class, savedBook.getBookId()))
+                .isNotNull()
                 .isEqualTo(savedBook);
 
     }

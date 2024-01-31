@@ -6,8 +6,6 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "Comments")
-@NamedEntityGraph(name = "comment-entity-graph",
-        attributeNodes = @NamedAttributeNode("book"))
 public class Comment {
 
     @Id
@@ -78,7 +76,6 @@ public class Comment {
         return "Comment{" +
                 "commentId=" + commentId +
                 ", text='" + commentText + '\'' +
-                ", book=" + book +
                 '}';
     }
 }

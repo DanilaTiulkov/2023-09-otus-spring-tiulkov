@@ -13,15 +13,16 @@ import java.util.Optional;
 public class JpaCommentDao implements CommentDao {
 
     @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
+    public JpaCommentDao(EntityManager em) {
+        this.em = em;
+    }
 
     @Override
     public List<Comment> findCommentsByBookId(long bookId) {
-        EntityGraph<?> entityGraph = em.getEntityGraph("comment-entity-graph");
         TypedQuery<Comment> query = em.createQuery("select c from Comment c where book.bookId = :bookId", Comment.class);
         query.setParameter("bookId", bookId);
-        query.setHint("javax.persistence.fetchgraph", entityGraph);
         return query.getResultList();
     }
 
@@ -29,11 +30,7 @@ public class JpaCommentDao implements CommentDao {
     public Optional<Comment> findCommentById(long commentId) {
         Comment comment;
         try {
-            TypedQuery<Comment> query = em.createQuery("select c " +
-                    "from Comment c " +
-                    "where commentId = :commentId", Comment.class);
-            query.setParameter("commentId", commentId);
-            comment = query.getSingleResult();
+            comment = em.find(Comment.class, commentId);
         } catch (NoResultException e) {
             comment = null;
         }
@@ -45,13 +42,6 @@ public class JpaCommentDao implements CommentDao {
         if (comment.getCommentId() == 0) {
             em.persist(comment);
             return comment;
-        }
-        try {
-            TypedQuery<Integer> query = em.createQuery("select 1 from Comment c where commentId = :id", Integer.class);
-            query.setParameter("id", comment.getCommentId());
-            query.getSingleResult();
-        } catch (NoResultException e) {
-            throw new EntityNotFoundException("Comment not found");
         }
         return em.merge(comment);
     }
