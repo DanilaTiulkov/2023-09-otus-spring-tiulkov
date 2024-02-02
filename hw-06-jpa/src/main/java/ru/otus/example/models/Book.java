@@ -71,22 +71,18 @@ public class Book {
         this.genre = genre;
     }
 
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return bookId == book.bookId && Objects.equals(title, book.title) && Objects.equals(author, book.author)
-                && Objects.equals(genre, book.genre);
+        return bookId == book.bookId && Objects.equals(title, book.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bookId, title, author, genre);
+        return Objects.hash(bookId, title);
     }
 
     @Override
