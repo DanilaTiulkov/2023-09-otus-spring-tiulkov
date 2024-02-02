@@ -29,7 +29,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public List<Comment> findCommentsByBookId(long id) {
         var book = bookDao.findById(id)
-                .orElseThrow(() ->new EntityNotFoundException("Sorry, but this book is not in the database"));
+                .orElseThrow(() -> new EntityNotFoundException("Sorry, but this book is not in the database"));
         return commentDao.findCommentsByBookId(book.getBookId());
     }
 
