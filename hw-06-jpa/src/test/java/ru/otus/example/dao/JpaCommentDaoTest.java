@@ -41,7 +41,8 @@ public class JpaCommentDaoTest {
         var expectingComment = em.find(Comment.class, 1);
         var actualComment = commentDao.findCommentById(1L);
         assertThat(actualComment)
-                .isNotNull()
+                .isPresent()
+                .get()
                 .isEqualTo(expectingComment);
     }
 
