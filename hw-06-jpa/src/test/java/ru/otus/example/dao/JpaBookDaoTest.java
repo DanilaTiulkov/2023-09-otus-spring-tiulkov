@@ -55,7 +55,7 @@ public class JpaBookDaoTest {
     public void findAll() {
         List<Book> returnedBooks = bookDao.findAll();
         List<Book> expectedBooks = dbBooks;
-        assertThat(returnedBooks).containsAnyElementsOf(expectedBooks);
+        assertThat(returnedBooks).containsExactlyElementsOf(expectedBooks);
     }
 
     @Test

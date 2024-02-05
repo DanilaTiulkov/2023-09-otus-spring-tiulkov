@@ -40,7 +40,7 @@ public class JpaCommentDaoTest {
     @DisplayName("Поиск комментария по id")
     public void findCommentById() {
         var expectingComment = em.find(Comment.class, 1);
-        var actualComment = em.find(Comment.class, 1);
+        var actualComment = commentDao.findCommentById(1L);
         assertThat(actualComment)
                 .isNotNull()
                 .isEqualTo(expectingComment);
@@ -51,17 +51,18 @@ public class JpaCommentDaoTest {
     public void findCommentsByBookId() {
         List<Comment> expectingComments = dbCommentsByBookId;
         List<Comment> actualComments = commentDao.findCommentsByBookId(1);
-        assertThat(actualComments).containsAnyElementsOf(expectingComments);
+        assertThat(actualComments).containsExactlyElementsOf(expectingComments);
     }
 
     @Test
     @DisplayName("Удаление комментария")
     public void deleteComment() {
         var deletedComment = em.find(Comment.class, 1);
-        commentDao.deleteComment(1);
-        List<Comment> actualComments = commentDao.findCommentsByBookId(1);
-        assertThat(actualComments).doesNotContain(deletedComment);
-        Assertions.assertEquals(0, actualComments.size());
+        assertThat(deletedComment).isNotNull();
+
+        commentDao.deleteComment(deletedComment.getCommentId());
+        var actualComment = em.find(Comment.class, 1);
+        assertThat(actualComment).isNull();
     }
 
     @Test
