@@ -13,10 +13,7 @@ import java.sql.SQLException;
 @SpringBootApplication
 public class Application {
 
-    public static void main(String[] args) throws SQLException {
-        ApplicationContext context = SpringApplication.run(Application.class, args);
-        System.out.println(context.getBean("authorDao", AuthorDao.class));
-        System.out.println(context.getBean("bookDao", BookDao.class));
-        System.out.println(context.getBean("commentDao", CommentDao.class));
+    public static void main(String[] args){
+        SpringApplication.run(Application.class, args);
     }
 }

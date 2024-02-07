@@ -57,20 +57,15 @@ public class Comment {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-        return commentId == comment.commentId && Objects.equals(commentText, comment.commentText)
-                && Objects.equals(book, comment.book);
+        return commentId == comment.commentId && Objects.equals(commentText, comment.commentText);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(commentId, commentText, book);
+        return Objects.hash(commentId, commentText);
     }
 
     @Override
@@ -78,7 +73,6 @@ public class Comment {
         return "Comment{" +
                 "commentId=" + commentId +
                 ", text='" + commentText + '\'' +
-                ", book=" + book +
                 '}';
     }
 }
