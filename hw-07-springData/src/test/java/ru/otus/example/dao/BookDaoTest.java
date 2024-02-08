@@ -42,9 +42,10 @@ public class BookDaoTest {
     @DisplayName("Поиск книги по id")
     public void findById() {
         var expectedBook = dbBooks.get(0);
-        var returnedBook = em.find(Book.class, 1L);
+        var returnedBook = bookDao.findById(1L);
         assertThat(returnedBook)
-                .isNotNull()
+                .isPresent()
+                .get()
                 .isEqualTo(expectedBook);
     }
 
