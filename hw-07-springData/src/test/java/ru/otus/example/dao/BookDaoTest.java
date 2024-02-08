@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @DataJpaTest
-public class JpaBookDaoTest {
+public class BookDaoTest {
 
     @Autowired
     private BookDao bookDao;

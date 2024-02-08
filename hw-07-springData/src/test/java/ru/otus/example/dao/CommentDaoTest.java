@@ -17,7 +17,7 @@ import java.util.List;
 
 
 @DataJpaTest
-public class JpaCommentDaoTest {
+public class CommentDaoTest {
 
     @Autowired
     private CommentDao commentDao;
