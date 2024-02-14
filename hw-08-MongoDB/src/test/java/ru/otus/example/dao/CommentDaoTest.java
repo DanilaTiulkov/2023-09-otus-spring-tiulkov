@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.mongodb.core.MongoOperations;
 import ru.otus.example.models.Book;
 import ru.otus.example.models.Comment;
 
@@ -22,7 +23,7 @@ public class CommentDaoTest {
     private CommentDao commentDao;
 
     @Autowired
-    private BookDao bookDao;
+    private MongoOperations mo;
 
     private List<Comment> dbComments;
 
@@ -118,6 +119,6 @@ public class CommentDaoTest {
     }
 
     public List<Book> getBooks() {
-        return bookDao.findAll();
+        return mo.findAll(Book.class);
     }
 }

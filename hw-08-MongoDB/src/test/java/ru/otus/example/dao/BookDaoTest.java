@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.mongodb.core.MongoOperations;
 import ru.otus.example.models.Author;
 import ru.otus.example.models.Book;
 import ru.otus.example.models.Genre;
@@ -23,10 +24,7 @@ public class BookDaoTest {
     private BookDao bookDao;
 
     @Autowired
-    private GenreDao genreDao;
-
-    @Autowired
-    private AuthorDao authorDao;
+    private MongoOperations mo;
 
     private List<Author> dbAuthors;
 
@@ -111,15 +109,15 @@ public class BookDaoTest {
     }
 
     private List<Author> getDbAuthors() {
-        return authorDao.findAll();
+        return mo.findAll(Author.class);
     }
 
     private List<Genre> getDbGenres() {
-        return genreDao.findAll();
+        return mo.findAll(Genre.class);
     }
 
     private List<Book> getDbBooks() {
-        return bookDao.findAll();
+        return mo.findAll(Book.class);
     }
 }
 
