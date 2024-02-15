@@ -71,6 +71,7 @@ public class Book {
         this.genre = genre;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -80,13 +81,12 @@ public class Book {
             return false;
         }
         Book book = (Book) o;
-        return bookId == book.bookId && Objects.equals(title, book.title) && Objects.equals(author, book.author)
-                && Objects.equals(genre, book.genre);
+        return bookId == book.bookId && Objects.equals(title, book.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bookId, title, author, genre);
+        return Objects.hash(bookId, title);
     }
 
     @Override
@@ -94,8 +94,6 @@ public class Book {
         return "Book{" +
                 "bookId=" + bookId +
                 ", title='" + title + '\'' +
-                ", author=" + author +
-                ", genre=" + genre +
                 '}';
     }
 }

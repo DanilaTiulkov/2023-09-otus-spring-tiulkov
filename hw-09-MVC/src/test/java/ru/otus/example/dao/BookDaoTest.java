@@ -1,11 +1,9 @@
 package ru.otus.example.dao;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -13,7 +11,6 @@ import ru.otus.example.controllers.BookController;
 import ru.otus.example.models.Author;
 import ru.otus.example.models.Book;
 import ru.otus.example.models.Genre;
-import ru.otus.example.models.dto.BookCreateDto;
 import ru.otus.example.models.dto.BookUpdateDto;
 import ru.otus.example.services.AuthorService;
 import ru.otus.example.services.BookServiceImpl;
