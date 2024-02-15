@@ -1,0 +1,28 @@
+spring:
+  shell:
+    interactive:
+      enabled: true
+    noninteractive:
+      enabled: false
+
+    command:
+      version:
+        enabled: false
+
+  data:
+    mongodb:
+      database: TiulkovDB
+      port: 0
+      host: localhost
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.4.16
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package: ru.otus.example.mongock.changelogTest
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
