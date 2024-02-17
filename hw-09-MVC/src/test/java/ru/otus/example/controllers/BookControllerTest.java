@@ -90,7 +90,7 @@ public class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Three planets")))
                 .andExpect(content().string(containsString("In search of the lost")))
-                .andExpect(content().string(containsString("Behind a closed door")));;
+                .andExpect(content().string(containsString("Behind a closed door")));
     }
 
     @Test
