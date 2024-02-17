@@ -1,4 +1,4 @@
-package ru.otus.example.dao;
+package ru.otus.example.controllers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -7,13 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.example.controllers.BookController;
 import ru.otus.example.models.Author;
 import ru.otus.example.models.Book;
 import ru.otus.example.models.Genre;
 import ru.otus.example.models.dto.BookUpdateDto;
 import ru.otus.example.services.AuthorService;
-import ru.otus.example.services.BookServiceImpl;
+import ru.otus.example.services.BookService;
 import ru.otus.example.services.GenreService;
 
 import static org.hamcrest.Matchers.containsString;
@@ -30,13 +29,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BookController.class)
-public class BookDaoTest {
+public class BookControllerTest {
 
     @Autowired
-    MockMvc mvc;
+    private MockMvc mvc;
 
     @MockBean
-    private BookServiceImpl bookService;
+    private BookService bookService;
 
     @MockBean
     private AuthorService authorService;
