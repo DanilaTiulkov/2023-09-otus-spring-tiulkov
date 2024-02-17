@@ -36,12 +36,17 @@ public class BookController {
         return "books";
     }
 
-    @GetMapping("/book")
-    public String bookPage(@RequestParam("bookId") long id, Model model) {
+    @GetMapping("/book/{id}")
+    public String bookPage(@PathVariable long id, Model model) {
         var book = bookService.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Book not found"));
         model.addAttribute("book", book);
         return "book";
+    }
+
+    @GetMapping("/book")
+    public String book(@RequestParam("bookId") long id) {
+        return "redirect:/book/" + id;
     }
 
     @GetMapping("/book/new")

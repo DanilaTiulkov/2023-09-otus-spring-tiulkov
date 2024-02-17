@@ -74,7 +74,7 @@ public class BookControllerTest {
                    new Genre(1, "Fantastic"));
         when(bookService.findById(1L)).thenReturn(Optional.of(book));
 
-        this.mvc.perform(get("/book").param("bookId", "1")).andDo(print())
+        this.mvc.perform(get("/book/1")).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Three planets")))
                 .andExpect(content().string(containsString("Ivan Sergeevich")))
