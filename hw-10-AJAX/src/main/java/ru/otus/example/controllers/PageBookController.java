@@ -13,10 +13,15 @@ public class PageBookController {
         return "books";
     }
 
-    @GetMapping("/book")
-    public String bookPage(@RequestParam("bookId") long id, Model model) {
+    @GetMapping("/book/{id}")
+    public String bookPage(@PathVariable long id, Model model) {
         model.addAttribute("bookId", id);
         return "book";
+    }
+
+    @GetMapping("/book")
+    public String book(@RequestParam("bookId") long id) {
+        return "redirect:/book/" + id;
     }
 
     @GetMapping("/book/new")
@@ -25,7 +30,7 @@ public class PageBookController {
         return "editBook";
     }
 
-    @GetMapping("/books/book/edit/{id}")
+    @GetMapping("/book/edit/{id}")
     public String editBook(@PathVariable long id, Model model) {
         model.addAttribute("refer", "/books/book/edit");
         model.addAttribute("bookId", id);
