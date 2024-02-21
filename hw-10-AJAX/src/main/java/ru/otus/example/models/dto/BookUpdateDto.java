@@ -2,7 +2,6 @@ package ru.otus.example.models.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import ru.otus.example.models.Book;
 
 import java.util.Objects;
 
