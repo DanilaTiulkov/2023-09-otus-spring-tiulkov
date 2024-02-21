@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit book</title>
+
+    <style>
+        body {
+            padding: 50px;
+        }
+        label {
+            display: inline-block;
+            width: 50px;
+        }
+        .row {
+            margin-top: 10px;
+        }
+        .center-block {
+            width: 250px;
+            margin: 0 auto;
+        }
+        .buttons {
+            width: 120px;
+            margin-left: 30%;
+            margin-top: 10px;
+        }
+        .error {
+            color: red;
+        }
+
+        h3 {
+            width: 120px;
+            margin-left: 35%;
+            margin-top: 10px;
+        }
+        button {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <form id="edit-form" th:method = "post" th:action="${refer}" th:object="${book}">
+        <div class="center-block">
+            <div>
+                <h3 th:if="${refer == '/book/edit'}">Edit book</h3>
+                <h3 th:if="${refer == '/book/new'}">Create book</h3>
+            </div>
+            <div class="row" th:if="${refer == '/book/edit'}">
+                <label for="input-id">Id</label>
+                <input id="input-id" type="text" name="bookId" readonly="readonly" th:value="*{bookId}"/>
+            </div>
+            <div class="row">
+                <label for="input-title">Title</label>
+                <input id="input-title" type="text" name="title" th:value="*{title}"/>
+            </div>
+            <div class="row">
+                <label for="author-select">Author</label>
+                <select id="author-select" th:field="*{authorId}">
+                    <option th:value="null" th:if="${refer == '/book/new'}">Choose an author</option>
+                    <option th:each="author : ${authors}"
+                            th:value="${author.authorId}"
+                            th:text="${author.fullName}"></option>
+                </select>
+            </div>
+            <div class="row">
+                <label for="genre-select">Genre</label>
+                <select id="genre-select" th:field="*{genreId}">
+                    <option th:value="null" th:if="${refer == '/book/new'}">Choose a genre</option>
+                    <option th:each="genre : ${genres}"
+                            th:value="${genre.genreId}"
+                            th:text="${genre.genreName}"></option>
+                </select>
+            </div>
+            <div class="buttons">
+                <button type="submit">Save</button>
+                <a th:href="@{/}">
+                    <button type="button">Cancel</button>
+                </a>
+            </div>
+            <div class="error" th:if="${#fields.hasErrors('title')}">Wrong title</div>
+            <div class="error" th:if="${#fields.hasErrors('authorId')}">Wrong author</div>
+            <div class="error" th:if="${#fields.hasErrors('genreId')}">Wrong genre</div>
+        </div>
+    </form>
+</body>
+</html>

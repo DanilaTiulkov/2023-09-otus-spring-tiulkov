@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Books</title>
+    <style>
+        body {
+            padding: 50px;
+        }
+
+        .find {
+            width: 300px;
+            margin: 0 auto;
+        }
+
+        .create {
+            width: 100px;
+            margin: 0 auto;
+        }
+
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+            margin-right: auto;
+            margin-left: auto;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        td, th {
+            padding: 5px;
+            border: 1px solid black;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="find">
+    <form th:method="get" th:action="@{/book}">
+        <button type="submit">Find book by id</button>
+        <input id="input-id" type=number name="bookId"/>
+    </form>
+</div>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr th:each="book : ${books}" th:object="${book}">
+            <td th:text="*{bookId}"></td>
+            <td th:text="*{title}"></td>
+            <td th:text="*{author.fullName}"></td>
+            <td th:text="*{genre.genreName}"></td>
+            <td>
+                <form th:method="get" th:action="@{/book/edit/__${book.bookId}__}">
+                    <button type="submit">Edit</button>
+                </form>
+            </td>
+            <td>
+                <form th:method="post" th:action="@{/book/delete/__${book.bookId}__}">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+<div class="create">
+    <form th:method="get" th:action="@{/book/new}">
+        <button type="submit">Create book</button>
+    </form>
+</div>
+</body>
+</html>
