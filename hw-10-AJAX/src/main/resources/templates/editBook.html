@@ -125,7 +125,7 @@
 
         function validate(arrayForValid) {
             arrayForValid.forEach(element => {
-                if (/\s+/.test(element.value) || element.value === "") {
+                if (/([ ])\1/.test(element.value) || element.value === "") {
                     document.getElementById("error").innerHTML = "All fields must be completed";
                 }
             });
