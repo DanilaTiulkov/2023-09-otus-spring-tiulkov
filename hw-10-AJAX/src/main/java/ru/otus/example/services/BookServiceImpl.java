@@ -48,7 +48,6 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public Book update(long id, String title, long authorId, long genreId) {
-        var book = jpaBookDao.findById(id).orElseThrow(() -> new EntityNotFoundException("Book doesn't found"));
         return save(id, title, authorId, genreId);
     }
 
