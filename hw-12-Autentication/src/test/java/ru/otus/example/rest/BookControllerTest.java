@@ -19,8 +19,6 @@ import ru.otus.example.services.AuthorService;
 import ru.otus.example.services.BookService;
 import ru.otus.example.services.GenreService;
 
-import static org.hamcrest.Matchers.containsString;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -84,9 +82,9 @@ public class BookControllerTest {
 
         this.mvc.perform(get("/api/books/1")).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Three planets")))
-                .andExpect(content().string(containsString("Ivan Sergeevich")))
-                .andExpect(content().string(containsString("Fantastic")));
+                .andExpect(content().json("{\"bookId\":1,\"title\":\"Three planets\"" +
+                                                        ",\"author\":{\"authorId\":1,\"fullName\":\"Ivan Sergeevich\"}" +
+                                                        ",\"genre\":{\"genreId\":1,\"genreName\":\"Fantastic\"}}"));
     }
 
     @Test
@@ -99,9 +97,15 @@ public class BookControllerTest {
 
         this.mvc.perform(get("/api/books")).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Three planets")))
-                .andExpect(content().string(containsString("In search of the lost")))
-                .andExpect(content().string(containsString("Behind a closed door")));
+                .andExpect(content().json("[{\"bookId\":1,\"title\":\"Three planets\"" +
+                                                        ",\"author\":{\"authorId\":1,\"fullName\":\"Ivan Sergeevich\"}" +
+                                                        ",\"genre\":{\"genreId\":1,\"genreName\":\"Fantastic\"}}" +
+                                                    ",{\"bookId\":2,\"title\":\"In search of the lost\"" +
+                                                        ",\"author\":{\"authorId\":2,\"fullName\":\"Ilya Abramov\"}" +
+                                                        ",\"genre\":{\"genreId\":2,\"genreName\":\"Adventure\"}}" +
+                                                    ",{\"bookId\":3,\"title\":\"Behind a closed door\"" +
+                                                        ",\"author\":{\"authorId\":3,\"fullName\":\"Mikhail Andreevich\"}" +
+                                                        ",\"genre\":{\"genreId\":3,\"genreName\":\"Horror\"}}]"));
     }
 
 

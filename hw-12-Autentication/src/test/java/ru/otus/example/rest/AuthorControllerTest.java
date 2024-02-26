@@ -52,9 +52,9 @@ public class AuthorControllerTest {
 
         this.mvc.perform(get("/api/authors")).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Ivan Sergeevich")))
-                .andExpect(content().string(containsString("Ilya Abramov")))
-                .andExpect(content().string(containsString("Mikhail Andreevich")));
+                .andExpect(content().json("[{\"authorId\":1,\"fullName\":\"Ivan Sergeevich\"}" +
+                                                    ",{\"authorId\":2,\"fullName\":\"Ilya Abramov\"}" +
+                                                    ",{\"authorId\":3,\"fullName\":\"Mikhail Andreevich\"}]"));
     }
 
 

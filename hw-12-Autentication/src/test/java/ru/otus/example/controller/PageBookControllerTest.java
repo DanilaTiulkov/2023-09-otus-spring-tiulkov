@@ -55,4 +55,12 @@ public class PageBookControllerTest {
         mvc.perform(get("/book/edit/1")).andDo(print())
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @DisplayName("Редирект на bookPage")
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    public void bookPageRedirect() throws Exception {
+        mvc.perform(get("/book?bookId=1")).andDo(print())
+                .andExpect(status().is(302));
+    }
 }

@@ -30,7 +30,7 @@ public class GenreControllerTest {
     @MockBean
     private GenreService genreService;
 
-    List<Genre> dbGenres;
+    private List<Genre> dbGenres;
     private String[] genresTitle;
 
     @BeforeEach
@@ -49,9 +49,9 @@ public class GenreControllerTest {
 
         this.mvc.perform(get("/api/genres")).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Fantastic")))
-                .andExpect(content().string(containsString("Adventure")))
-                .andExpect(content().string(containsString("Horror")));
+                .andExpect(content().json("[{\"genreId\":1,\"genreName\":\"Fantastic\"}" +
+                                                    ",{\"genreId\":2,\"genreName\":\"Adventure\"}" +
+                                                    ",{\"genreId\":3,\"genreName\":\"Horror\"}]"));
     }
 
 
