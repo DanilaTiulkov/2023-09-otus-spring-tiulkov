@@ -6,9 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.example.models.Author;
+import ru.otus.example.security.SecurityConfiguration;
 import ru.otus.example.services.AuthorService;
 
 import java.util.List;
@@ -22,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AuthorController.class)
+@Import(SecurityConfiguration.class)
 public class AuthorControllerTest {
 
 
@@ -44,7 +47,7 @@ public class AuthorControllerTest {
 
     @Test
     @DisplayName("Поиск всех авторов")
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void getAuthors() throws Exception {
         List<Author> authors = dbAuthors;
 

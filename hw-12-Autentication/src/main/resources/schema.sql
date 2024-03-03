@@ -24,5 +24,5 @@ create table Users(
     user_id bigint auto_increment PRIMARY KEY,
     username varchar(255),
     password varchar(255),
-    role varchar(255)
+    authority varchar(255)
 );

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -15,6 +16,7 @@ import ru.otus.example.models.Book;
 import ru.otus.example.models.Genre;
 import ru.otus.example.models.dto.BookCreateDto;
 import ru.otus.example.models.dto.BookUpdateDto;
+import ru.otus.example.security.SecurityConfiguration;
 import ru.otus.example.services.AuthorService;
 import ru.otus.example.services.BookService;
 import ru.otus.example.services.GenreService;
@@ -31,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(BookController.class)
+@Import(SecurityConfiguration.class)
 public class BookControllerTest {
 
     @Autowired
@@ -73,7 +76,7 @@ public class BookControllerTest {
 
     @Test
     @DisplayName("Поиск книги по id")
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void findById() throws Exception {
         var book = new Book(1, "Three planets",
                    new Author(1, "Ivan Sergeevich"),
@@ -89,7 +92,7 @@ public class BookControllerTest {
 
     @Test
     @DisplayName("Поиск всех книг")
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void findBooks() throws Exception {
         List<Book> books = dbBooks;
 
@@ -112,7 +115,7 @@ public class BookControllerTest {
 
     @Test
     @DisplayName("Обновление книги")
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void updateBook() throws Exception {
         var bookUpdateDto = new BookUpdateDto(1, "Two planets", 1L, 1L);
 
@@ -127,7 +130,7 @@ public class BookControllerTest {
 
     @Test
     @DisplayName("Удаление книги")
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void deleteBook() throws Exception {
         this.mvc.perform(delete("/api/books/1").with(csrf()))
                 .andExpect(status().isOk());
@@ -135,7 +138,7 @@ public class BookControllerTest {
 
     @Test
     @DisplayName("Сохранение книги")
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void saveBook() throws Exception {
         var bookCreateDto = new BookCreateDto("Test book", 1L, 1L);
         this.mvc.perform(post("/api/books").with(csrf())

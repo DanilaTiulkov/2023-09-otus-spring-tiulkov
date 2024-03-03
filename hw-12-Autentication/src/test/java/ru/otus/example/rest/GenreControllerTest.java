@@ -6,9 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.example.models.Genre;
+import ru.otus.example.security.SecurityConfiguration;
 import ru.otus.example.services.GenreService;
 
 import java.util.List;
@@ -22,6 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(GenreController.class)
+@Import(SecurityConfiguration.class)
 public class GenreControllerTest {
 
     @Autowired
@@ -41,7 +44,7 @@ public class GenreControllerTest {
 
     @Test
     @DisplayName("Поиск всех жанров")
-    @WithMockUser(username = "admin", authorities = {"ADMIN"})
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     public void getGenres() throws Exception {
         List<Genre> genres = dbGenres;
 

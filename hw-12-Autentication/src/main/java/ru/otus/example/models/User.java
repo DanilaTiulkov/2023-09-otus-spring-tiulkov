@@ -19,13 +19,13 @@ public class User {
     private String password;
 
     @Column
-    private String role;
+    private String authority;
 
-    public User(long userId, String username, String password, String role) {
+    public User(long userId, String username, String password, String authority) {
         this.userId = userId;
         this.username = username;
         this.password = password;
-        this.role = role;
+        this.authority = authority;
     }
 
     public User() {
@@ -56,12 +56,12 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public String getAuthority() {
+        return authority;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setAuthority(String authority) {
+        this.authority = authority;
     }
 
     @Override
@@ -74,12 +74,12 @@ public class User {
         }
         User user = (User) o;
         return userId == user.userId && Objects.equals(username, user.username)
-                && Objects.equals(password, user.password) && Objects.equals(role, user.role);
+                && Objects.equals(password, user.password) && Objects.equals(authority, user.authority);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, username, password, role);
+        return Objects.hash(userId, username, password, authority);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class User {
                 "userId=" + userId +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
+                ", authority='" + authority + '\'' +
                 '}';
     }
 }
