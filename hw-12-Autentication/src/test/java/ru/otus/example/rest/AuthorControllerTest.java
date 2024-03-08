@@ -16,7 +16,6 @@ import ru.otus.example.services.AuthorService;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

@@ -10,6 +10,6 @@ values ('Three planets', 1, 1), ('In search of the lost', 2, 2), ('Behind a clos
 insert into Comments(comment_text, book_id)
 values ('Не понравилось', 1), ('Понравилось', 2), ('Я очень испугался!', 3);
 
-insert into Users(username, password, authority)
-values ('admin', '$2a$12$NEY17oift3BTOrn6BVPWjOp0B7lHlfEtTp0vQuRqNw98Hj50kXQ4S', 'ROLE_ADMIN');
+insert into Users(username, password, role)
+values ('admin', '$2a$12$NEY17oift3BTOrn6BVPWjOp0B7lHlfEtTp0vQuRqNw98Hj50kXQ4S', 'ADMIN');
 --login = admin, password = password
