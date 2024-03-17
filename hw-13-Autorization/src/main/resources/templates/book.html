@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book</title>
+    <style>
+        body {
+            padding: 50px;
+        }
+
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        td, th {
+            padding: 5px;
+            border: 1px solid black;
+            text-align: center;
+        }
+    </style>
+
+    <script>
+
+        function initBook() {
+            fetch("/api/books/[[${bookId}]]")
+                .then(response => response.json().then(book => {
+                    let bookBody = document.getElementById("book-body");
+                    bookBody.innerHTML = `
+                        <td>${book.bookId}</td>
+                        <td>${book.title}</td>
+                        <td>${book.author.fullName}</td>
+                        <td>${book.genre.genreName}</td>
+                    `
+                }));
+        }
+
+
+        document.addEventListener('DOMContentLoaded', initBook);
+    </script>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Genre</th>
+            </tr>
+        </thead>
+        <tbody id="book-body">
+            <tr>
+
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
