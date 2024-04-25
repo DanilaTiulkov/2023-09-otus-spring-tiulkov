@@ -1,0 +1,48 @@
+spring:
+
+  batch:
+    job:
+      enabled: false
+  h2:
+    console:
+      enabled: true
+      path: /h2/
+  shell:
+    interactive:
+      enabled: true
+    noninteractive:
+      enabled: false
+
+    command:
+      version:
+        enabled: false
+
+  datasource:
+    url: jdbc:h2:mem:default
+    username: root
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+  data:
+    mongodb:
+      database: TiulkovDB
+      port: 27017
+      host: localhost
+
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.4.16
+
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package: ru.otus.example.changelogs
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
