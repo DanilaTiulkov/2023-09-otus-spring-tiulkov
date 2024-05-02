@@ -15,7 +15,6 @@ import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilde
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import ru.otus.example.model.dto.BookDto;
@@ -57,18 +56,7 @@ public class BookDocumentStepConfig {
 
     @Bean
     public ItemProcessor<BookDoc, BookDto> bookProcessor(BookService bookService) {
-        var params = new MapSqlParameterSource();
-        return (BookDoc item) -> {
-            params.addValue("authorId", item.getAuthor().getAuthorId());
-            params.addValue("genreId", item.getGenre().getGenreId());
-            var authorId = namedParameterJdbcTemplate
-                    .queryForObject("select author_id from Authors_temp where author_doc_id = :authorId",
-                            params, Long.class);
-            var genreId = namedParameterJdbcTemplate
-                    .queryForObject("select genre_id from Genres_temp where genre_doc_id = :genreId",
-                            params, Long.class);
-            return bookService.transform(item, authorId, genreId);
-        };
+        return bookService::transform;
     }
 
     @Bean

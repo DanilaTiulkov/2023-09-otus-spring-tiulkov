@@ -5,5 +5,6 @@ import ru.otus.example.model.mongo.BookDoc;
 
 public interface BookService {
 
-    public BookDto transform(BookDoc bookDoc, long authorId, long genreId);
+    BookDto transform(BookDoc bookDoc);
+
 }
