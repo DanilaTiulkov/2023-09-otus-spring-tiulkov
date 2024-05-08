@@ -26,8 +26,8 @@ public class JobConfig {
                 .next(transformAuthorDocStep)
                 .next(transformGenreDocStep)
                 .next(transformBookDocStep)
-                .next(dropTableAuthorsTemp)
-                .next(dropTableGenresTemp)
+//                .next(dropTableAuthorsTemp)
+//                .next(dropTableGenresTemp)
                 .build();
     }
 }

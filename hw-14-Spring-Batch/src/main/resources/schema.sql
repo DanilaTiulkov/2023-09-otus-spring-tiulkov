@@ -20,3 +20,6 @@ create table Comments(
     book_id bigint,
     foreign key (book_id) references Books(book_id) on delete cascade
 );
+create sequence authors_id_seq start with 1;
+create sequence genres_id_seq start with 1;
+
