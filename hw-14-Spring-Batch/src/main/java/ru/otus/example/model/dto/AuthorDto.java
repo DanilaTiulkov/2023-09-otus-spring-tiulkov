@@ -1,6 +1,5 @@
 package ru.otus.example.model.dto;
 
-import jakarta.persistence.Column;
 
 import java.util.Objects;
 
@@ -44,10 +43,15 @@ public class AuthorDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         AuthorDto authorDto = (AuthorDto) o;
-        return authorId == authorDto.authorId && Objects.equals(authorDocId, authorDto.authorDocId) && Objects.equals(fullName, authorDto.fullName);
+        return authorId == authorDto.authorId && Objects.equals(authorDocId, authorDto.authorDocId)
+                && Objects.equals(fullName, authorDto.fullName);
     }
 
     @Override
