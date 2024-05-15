@@ -6,7 +6,6 @@ import com.github.cloudyrock.mongock.driver.mongodb.springdata.v3.decorator.impl
 import com.mongodb.client.MongoDatabase;
 import ru.otus.example.model.mongo.AuthorDoc;
 import ru.otus.example.model.mongo.BookDoc;
-import ru.otus.example.model.mongo.CommentDoc;
 import ru.otus.example.model.mongo.GenreDoc;
 
 @ChangeLog
@@ -57,12 +56,5 @@ public class InitDB {
         secondBook = template.save(new BookDoc(null, "In search of the lost", authorIlya, genreAdv));
         thirdBook = template.save(new BookDoc(null, "Behind a closed door", authorMikhail, genreHor));
         fourthBook = template.save(new BookDoc(null, "Martians", authorIvan, genreFan));
-    }
-
-    @ChangeSet(order = "005", id = "InsertComments", author = "DanilaTiulkov", runAlways = true)
-    public void insertComments(MongockTemplate template) {
-        template.save(new CommentDoc(null, "Не понравилось", firstBook));
-        template.save(new CommentDoc(null, "Понравилось", secondBook));
-        template.save(new CommentDoc(null, "Я очень испугался", thirdBook));
     }
 }

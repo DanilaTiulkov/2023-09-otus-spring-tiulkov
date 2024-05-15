@@ -17,17 +17,11 @@ public class JobConfig {
     }
 
     @Bean
-    public Job insertBookJob(Step transformBookDocStep, Step transformAuthorDocStep, Step createTableAuthorsTemp,
-                             Step transformGenreDocStep, Step createTableGenresTemp, Step dropTableAuthorsTemp,
-                             Step dropTableGenresTemp) {
+    public Job insertBookJob(Step transformBookDocStep, Step transformAuthorDocStep, Step transformGenreDocStep) {
         return new JobBuilder("importBookJobBuilder", jobRepository)
-                .start(createTableAuthorsTemp)
-                .next(createTableGenresTemp)
-                .next(transformAuthorDocStep)
+                .start(transformAuthorDocStep)
                 .next(transformGenreDocStep)
                 .next(transformBookDocStep)
-//                .next(dropTableAuthorsTemp)
-//                .next(dropTableGenresTemp)
                 .build();
     }
 }

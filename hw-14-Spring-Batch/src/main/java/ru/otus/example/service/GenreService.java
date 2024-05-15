@@ -1,9 +1,14 @@
 package ru.otus.example.service;
 
-import ru.otus.example.model.h2.Genre;
+import ru.otus.example.model.dto.GenreDto;
 import ru.otus.example.model.mongo.GenreDoc;
+
+import java.util.Map;
 
 public interface GenreService {
 
-    public Genre transform(GenreDoc genreDoc);
+    GenreDto transform(GenreDoc genreDoc);
+
+    Map<String, Long> findAllGenresIds();
+
 }
