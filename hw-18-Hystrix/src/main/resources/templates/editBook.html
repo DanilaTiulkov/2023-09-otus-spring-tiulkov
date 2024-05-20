@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit book</title>
+
+    <style>
+        body {
+            padding: 50px;
+        }
+        label {
+            display: inline-block;
+            width: 50px;
+        }
+        .row {
+            margin-top: 10px;
+        }
+        .center-block {
+            width: 250px;
+            margin: 0 auto;
+        }
+        .buttons {
+            width: 120px;
+            margin-left: 30%;
+            margin-top: 10px;
+        }
+        .error {
+            text-align: center;
+            color: red;
+        }
+        button {
+            margin-right: 5px;
+        }
+    </style>
+    <script>
+        function initBook() {
+            let selectedAuthor = 0;
+            let selectedGenre = 0;
+            if ("[[${refer}]]" === "/book/new") {
+                initAuthors(selectedAuthor);
+                initGenres(selectedGenre);
+            } else {
+                fetch("/api/books/[[${bookId}]]")
+                    .then(response => response.json()).then(book => {
+                    let bookId = document.getElementById("input-id");
+                    let title = document.getElementById("input-title");
+                    bookId.value = `${book.bookId}`;
+                    title.value = `${book.title}`;
+                    selectedAuthor = `${book.author.authorId}`;
+                    selectedGenre = `${book.genre.genreId}`;
+                    initAuthors(selectedAuthor);
+                    initGenres(selectedGenre);
+                });
+            }
+        }
+
+        function initAuthors(authorId) {
+            fetch("/api/authors").then(response => response.json()).then(authors => {
+                let authorSelect = document.getElementById("author-select");
+                authors.forEach(author => {
+                    if (`${author.authorId}` === authorId) {
+                        authorSelect.options[authorSelect.options.length] =
+                            new Option(`${author.fullName}`, `${author.authorId}`, true, true);
+                    } else {
+                        authorSelect.options[authorSelect.options.length] =
+                            new Option(`${author.fullName}`, `${author.authorId}`);
+                    }
+                });
+            });
+        }
+
+        function initGenres(genreId) {
+            return fetch("/api/genres")
+                .then(response => response.json()).then(genres => {
+                    let genreSelect = document.getElementById("genre-select");
+                    genres.forEach(genre => {
+                        if (`${genre.genreId}` === genreId) {
+                            genreSelect.options[genreSelect.options.length] =
+                                new Option(`${genre.genreName}`, `${genre.genreId}`, true, true);
+                        } else {
+                            genreSelect.options[genreSelect.options.length] =
+                                new Option(`${genre.genreName}`, `${genre.genreId}`);
+                        }
+                    });
+                });
+        }
+
+        function saveBook() {
+            let method;
+            let book;
+            let url;
+            let bookId = document.getElementById("input-id");
+            let title = document.getElementById("input-title");
+            let authorId = document.getElementById("author-select");
+            let genreId = document.getElementById("genre-select");
+            let arrayForValid = [title, authorId, genreId];
+            validate(arrayForValid);
+            if ("[[${refer}]]" === "/book/new") {
+                url = "/api/books";
+                method = 'POST';
+                book = {title: title.value,
+                        authorId: authorId.value,
+                        genreId: genreId.value}
+            } else {
+                url = "/api/books/" + bookId.value;
+                method = 'PUT';
+                book = {bookId: bookId.value,
+                        title: title.value,
+                        authorId: authorId.value,
+                        genreId: genreId.value}
+            }
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(book)})
+                .then(response =>  {
+                    if (response.ok) {
+                        window.location.href = '/books';
+                    }
+            })
+        }
+
+        function validate(arrayForValid) {
+            arrayForValid.forEach(element => {
+                if (/([ ])\1/.test(element.value) || element.value === "") {
+                    document.getElementById("error").innerHTML = "All fields must be completed";
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', initBook);
+    </script>
+</head>
+<body>
+    <form id="edit-form" th:method = "post" th:action="${refer}">
+        <div class="center-block">
+            <div class="row" th:if="${refer == '/books/book/edit'}">
+                <label for="input-id">Id</label>
+                <input id="input-id" type="text" name="bookId" readonly="readonly"/>
+            </div>
+            <div class="row">
+                <label for="input-title">Title</label>
+                <input id="input-title" type="text" name="title"/>
+            </div>
+            <div class="row">
+                <label for="author-select">Author</label>
+                <select id="author-select" name="author">
+                    <option th:value="null" th:if="${refer == '/book/new'}">Choose an author</option>
+                </select>
+            </div>
+            <div class="row">
+                <label for="genre-select">Genre</label>
+                <select id="genre-select" name="genre">
+                    <option th:value="null" th:if="${refer == '/book/new'}">Choose a genre</option>
+                </select>
+            </div>
+            <div class="buttons">
+                <button type="button" onclick="saveBook()">Save</button>
+                <a th:href="@{/books}">
+                    <button type="button">Cancel</button>
+                </a>
+            </div>
+            <div class="error row" id="error"></div>
+        </div>
+    </form>
+</body>
+</html>
