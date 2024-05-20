@@ -1,0 +1,26 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:13
+    container_name: "postgres_db"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=libraryDB
+    ports:
+      - '5432:5432'
+  library:
+    container_name: "library"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    environment:
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/libraryDB
+    depends_on:
+      - postgres
+
+
