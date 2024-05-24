@@ -1,29 +1,31 @@
 package ru.otus.example.service;
 
 import org.springframework.stereotype.Service;
+import ru.otus.example.cache.AuthorCache;
+import ru.otus.example.cache.GenreCache;
 import ru.otus.example.model.dto.BookDto;
 import ru.otus.example.model.mongo.BookDoc;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class BookServiceImpl implements BookService {
 
-    private  final AuthorService authorService;
+    private  final AuthorCache authorCache;
 
-    private final GenreService genreService;
+    private final GenreCache genreCache;
 
     private Map<String, Long> authorsIds;
 
     private Map<String, Long> genresIds;
 
 
-    public BookServiceImpl(AuthorService authorService, GenreService genreService,
-                           Map<String, Long> authorsIds, Map<String, Long> genresIds) {
-        this.authorService = authorService;
-        this.genreService = genreService;
-        this.authorsIds = authorsIds;
-        this.genresIds = genresIds;
+    public BookServiceImpl(AuthorCache authorCache, GenreCache genreCache) {
+        this.authorCache = authorCache;
+        this.genreCache = genreCache;
+        this.authorsIds = new ConcurrentHashMap<>();
+        this.genresIds = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -37,7 +39,7 @@ public class BookServiceImpl implements BookService {
     }
 
     private void initCollections() {
-        authorsIds = authorService.findAllAuthorsIds();
-        genresIds = genreService.findAllGenresIds();
+        authorsIds = authorCache.getAuthorsIds();
+        genresIds = genreCache.getGenresIds();
     }
 }
