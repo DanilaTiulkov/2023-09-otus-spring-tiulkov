@@ -59,7 +59,7 @@
       fetch("/api/products/[[${productId}]]").then(result => result.json()).then(product => {
         let productTbody = document.getElementById("product-tbody");
         let span = document.getElementById("product-name-and-price");
-        span.innerHTML =`${product.title}` + ", " + `${product.price} RUB`
+        span.innerHTML =`${product.title}` + ", " + `${product.price} ₽`
         productTbody.innerHTML = `
         <tr>
             <td>Название</td>
@@ -67,7 +67,7 @@
         </tr>
         <tr>
             <td>Цена</td>
-            <td>${product.price}, RUB</td>
+            <td>${product.price}, ₽</td>
         </tr>
         <tr>
             <td>Категория</td>
