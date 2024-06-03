@@ -13,6 +13,6 @@ public class Application {
     public static void main(String[] args) throws SQLException {
         SpringApplication.run(Application.class, args);
         System.out.println("Application started at http://localhost:8080");
-        Console.main(args);
+//        Console.main(args);
     }
 }

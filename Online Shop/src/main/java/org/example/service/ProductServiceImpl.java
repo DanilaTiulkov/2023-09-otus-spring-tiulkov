@@ -62,8 +62,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductDto> findByTitleAndCategoryCategoryId(Long categoryId, String productTitle) {
-        var products = productRepository.findByTitleAndCategoryCategoryId(categoryId, productTitle);
+    public List<ProductDto> findByTitleAndCategoryCategoryId(String productTitle, Long categoryId) {
+        var products = productRepository.findByTitleAndCategoryCategoryId(productTitle, categoryId);
         return products.stream().map(productMapper::getProductDto).toList();
     }
 

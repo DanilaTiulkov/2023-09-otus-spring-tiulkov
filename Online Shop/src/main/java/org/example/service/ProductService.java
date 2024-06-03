@@ -15,7 +15,7 @@ public interface ProductService {
 
     List<ProductDto> findByCategoryId(Long categoryId);
 
-    List<ProductDto> findByTitleAndCategoryCategoryId(Long categoryId, String productTitle);
+    List<ProductDto> findByTitleAndCategoryCategoryId(String productTitle, Long categoryId);
 
     ProductDto insert(String title, int price, int quantity, long categoryId);
 

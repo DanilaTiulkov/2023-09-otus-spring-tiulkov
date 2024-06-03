@@ -37,7 +37,7 @@ public class ProductController {
         } else if (productTitle.isEmpty()) {
             return productService.findByCategoryId(categoryId);
         } else {
-            return productService.findByTitleAndCategoryCategoryId(categoryId, productTitle);
+            return productService.findByTitleAndCategoryCategoryId(productTitle, categoryId);
         }
     }
 

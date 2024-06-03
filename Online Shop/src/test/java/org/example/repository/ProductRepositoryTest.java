@@ -52,7 +52,7 @@ public class ProductRepositoryTest {
     @DisplayName("Получение продуктов по id категории и по названию")
     public void shouldReturnProductByCategory() {
         var expectedProducts = List.of(em.find(Product.class, 1L));
-        var actualProducts = productRepository.findByTitleAndCategoryCategoryId(1L, "Bosch GSR 180-Li Professional");
+        var actualProducts = productRepository.findByTitleAndCategoryCategoryId("Bosch GSR 180-Li Professional", 1L);
         assertThat(actualProducts).containsExactlyElementsOf(expectedProducts);
     }
 

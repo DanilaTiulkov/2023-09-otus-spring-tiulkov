@@ -34,6 +34,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "from Product p " +
             "inner join fetch p.category" +
             " where p.category.categoryId = :categoryId and p.title like %:productTitle%")
-    List<Product> findByTitleAndCategoryCategoryId(@Param("categoryId")Long categoryId,
-                                                   @Param("productTitle") String productTitle);
+    List<Product> findByTitleAndCategoryCategoryId(@Param("productTitle") String productTitle,
+                                                   @Param("categoryId")Long categoryId);
 }
