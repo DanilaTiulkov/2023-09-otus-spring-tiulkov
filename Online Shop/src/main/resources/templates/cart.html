@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Корзина</title>
+</head>
+    <style>
+        body {
+            padding: 50px;
+        }
+
+        table, td, th {
+            border: 1px solid black;
+            border-collapse: collapse;
+            margin: auto;
+            margin-bottom: 10px;
+        }
+
+        td:nth-child(2) {
+            text-align: center;
+        }
+
+        .title {
+            display: block;
+            width: auto;
+            height: auto;
+            font-size: 30px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .button {
+            display: inline-block;
+            width: 120px;
+            margin-top: 20px;
+            margin-left: 40%;
+        }
+
+        .center{
+            width: 600px;
+            margin: auto;
+        }
+
+        .total-price, .total {
+            font-size: 20px;
+            margin-top: 10px;
+            margin-left: 75%;
+        }
+
+    </style>
+
+    <script>
+
+       function initCart() {
+           let totalPrice = 0;
+           if(document.cookie.length !== 0) {
+               let cookieArray = document.cookie.split('; ');
+               let productTbody = document.getElementById("tbody");
+               let productsTotalPrice = document.getElementById("price");
+               cookieArray.forEach(cookie => {
+                   let productId = cookie.split('=')[0];
+                   let quantity = cookie.split('=')[1];
+                   fetch("/api/products/" + productId).then(result => result.json()).then(product => {
+                       productTbody.innerHTML += `
+                   <tr id="trId${product.productId}">
+                       <td>${product.title}</td>
+                       <td>
+                           <button id="minus-button" onclick="priceChange(${product.productId}, ${product.price}, '-')">-</button>
+                           <span id="${product.productId}-quantity">${quantity}</span>
+                           <button id="plus-button" onclick="priceChange(${product.productId}, ${product.price}, '+')">+</button>
+                       </td>
+                       <td>${product.price}</td>
+                            <td><button id="delete-button" onclick="deleteFromCart(${product.productId}, ${product.price})">Удалить из корзины</button>
+                       </td>
+                   </tr>`
+                       productPrice = product.price * quantity;
+                       totalPrice += productPrice;
+                       productsTotalPrice.textContent = totalPrice;
+                   });
+               });
+           } else {
+                document.getElementById("full-cart").remove();
+                let spanCart = document.getElementById("span-cart")
+                spanCart.textContent = "Корзина пуста";
+           }
+        }
+
+       function priceChange(productId, price, sign) {
+           let quantity = Number(getCookie(productId));
+           if (quantity !== null) {
+               let totalPriceValue;
+               let quantityElement = document.getElementById(productId + "-quantity");
+               let productsTotalPrice = document.getElementById("price");
+               if(sign === "-" && quantity >= 2) {
+                   quantity -= 1;
+                   totalPriceValue = Number(productsTotalPrice.textContent) - price;
+                   document.cookie = productId + "=" + quantity + ";max-age=3600; path=/";
+                   quantityElement.textContent = String(quantity);
+                   productsTotalPrice.textContent = String(totalPriceValue);
+               } else if (sign === "+" && quantity >= 1) {
+                   quantity += 1;
+                   totalPriceValue = Number(productsTotalPrice.textContent) + price;
+                   document.cookie = productId + "=" + quantity + ";max-age=3600; path=/";
+                   quantityElement.textContent = String(quantity);
+                   productsTotalPrice.textContent = String(totalPriceValue);
+               }
+           }
+        }
+
+       function deleteFromCart(productId, price) {
+           document.cookie = productId + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+           let row = document.getElementById("trId" + productId);
+           let quantity = Number(document.getElementById(productId + "-quantity").textContent);
+           let productsTotalPrice = document.getElementById("price");
+           let totalPriceValue = Number(document.getElementById("price").textContent) - quantity * price;
+           productsTotalPrice.textContent = String(totalPriceValue);
+           document.getElementById("tbody").removeChild(row);
+           if(document.cookie.length === 0) {
+             initCart();
+           }
+        }
+
+       function getCookie(name) {
+           let cookie = document.cookie.split("; ").find(row => row.startsWith(name + "="));
+           return cookie ? cookie.split("=")[1] : null;
+       }
+
+       function initHiddenTotalPrice() {
+           let totalPriceValue = Number(document.getElementById("price").textContent);
+           let hiddenElement = document.getElementById("total-price");
+           hiddenElement.value = totalPriceValue;
+       }
+
+       document.addEventListener("DOMContentLoaded", initCart);
+    </script>
+<body>
+    <div class="center">
+      <span id="span-cart" class="title">Корзина</span>
+        <div id="full-cart">
+            <table>
+                <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Количество</th>
+                    <th>Цена</th>
+                </tr>
+                </thead>
+                <tbody id="tbody">
+
+                </tbody>
+            </table>
+            <div class="total-price">
+                <span id="total">Итого: </span>
+                <span id="price"></span>
+            </div>
+            <div class="button">
+                <form id="make-order" th:action="@{/personal/order/make}" onsubmit="initHiddenTotalPrice()">
+                    <button id="createOrder" type="submit">Оформить заказ</button>
+                    <input id="total-price" name="total-price" type="hidden">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

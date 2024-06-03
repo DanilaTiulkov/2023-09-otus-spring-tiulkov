@@ -1,0 +1,1 @@
+1. Почему если переместить SpringBootTestConfiguration в пакет выще то будет вылетать ошибка java.lang.IllegalStateException: Found multiple @SpringBootConfiguration annotated classes

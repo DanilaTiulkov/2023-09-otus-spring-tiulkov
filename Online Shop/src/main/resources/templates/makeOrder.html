@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Оформление заказа</title>
+</head>
+  <style>
+
+    body {
+      padding: 50px;
+    }
+
+    label {
+      display: inline-block;
+      width: 70px;
+    }
+
+    .title {
+      display: block;
+      width: auto;
+      height: auto;
+      font-size: 30px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .row{
+      margin-top: 10px;
+    }
+
+    .error {
+      text-align: center;
+      color: red;
+    }
+
+    .button {
+      display: inline-block;
+      width: 130px;
+      margin-top: 20px;
+      margin-left: 30%;
+    }
+
+    .center{
+      width: 300px;
+      margin: auto;
+    }
+  </style>
+
+  <script src="/js/jquery-1.9.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+
+  <script>
+
+    function createOrder() {
+      let clientName = document.getElementById("name-input").value;
+      let phone = document.getElementById("phone-input").value;
+      let email = document.getElementById("email-input").value;
+      let address = document.getElementById("address-input").value;
+      let cookieArray = document.cookie.split("; ");
+      let price = [[${totalPrice}]];
+      let orderDate = new Date().toISOString().split('T')[0];
+      let arrayForValid = [clientName, phone, email, address];
+      let order = {
+        clientName: clientName,
+        phone: phone,
+        email: email,
+        address: address,
+        cookies: cookieArray,
+        price: price,
+        orderDate: orderDate
+      };
+      if (validate(arrayForValid) === false) {
+        fetch("/api/orders", {
+          method: 'POST',
+          headers: {
+            'Accept' : 'application/json',
+            'Content-Type' : 'application/json'
+          },
+          body: JSON.stringify(order)
+        }).then(response => {
+          if (response.ok) {
+            response.json().then(order => {
+              window.location.href = "/personal/order/"+ order.orderId +"/success";
+            });
+          }
+        })
+      }
+    }
+
+    function validate(arrayForValid) {
+      let hasError = false;
+      let checkEmpty = /([ ])\1/;
+      let emptyFields = arrayForValid.some(element => (checkEmpty.test(element) || element === "" || element === "0"));
+      if (emptyFields === true) {
+        document.getElementById("wrong-size").innerHTML = "Все поля дожны быть заполенены";
+        hasError = true;
+      }
+      hasError = validateName(hasError);
+      hasError = validatePhone(hasError);
+      hasError = validateEmail(hasError);
+
+      return hasError;
+    }
+
+    function validateName(hasError) {
+      let checkName = /[А-Яа-я]/;
+      let name = document.getElementById("name-input").value;
+      if (checkName.test(name) === false) {
+        hasError = true;
+        document.getElementById("wrong-name").innerHTML = "Неправильно введено имя";
+      }
+      return hasError;
+    }
+
+    function validatePhone(hasError) {
+      let checkPhone = /[+]\d\(\d{3}\)\d{3}[-]\d{2}[-]\d{2}/;
+      let phone = document.getElementById("phone-input").value;
+      if (checkPhone.test(phone) === false) {
+        hasError = true;
+        document.getElementById("wrong-phone").innerHTML = "Неправильно введен телефон";
+      }
+      return hasError;
+    }
+
+    function validateEmail(hasError) {
+      let checkEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      let email = document.getElementById("email-input").value;
+      if (checkEmail.test(email) === false) {
+        hasError = true;
+        document.getElementById("wrong-email").innerHTML = "Неправильно введен email";
+      }
+      return hasError;
+    }
+
+    function createOrderItems(orderId) {
+      let price = [[${totalPrice}]];
+      let cookieArray = document.cookie.split("; ");
+      cookieArray.forEach(cookie => {
+        let productId = cookie.split('=')[0];
+        let productQuantity = cookie.split('=')[1];
+        console.log(productQuantity)
+        let orderItems = {
+          orderId: orderId,
+          productId: productId,
+          productQuantity: productQuantity,
+          price: price
+        }
+        fetch("/api/order-items", {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(orderItems)
+        });
+      });
+    }
+
+    jQuery(document).ready(function ($) {
+      $('#phone-input').mask('+7(999)999-99-99')
+    });
+
+  </script>
+<body>
+<div class="center">
+  <span id="cart" class="title">Оформление заказа</span>
+  <div class="row">
+    <label for="name-input">Имя</label>
+    <input id="name-input" type="text"/>
+  </div>
+  <div class="row">
+    <label for="phone-input">Телефон</label>
+    <input id="phone-input" type="text" placeholder="+7(___)___-__-__"/>
+  </div>
+  <div class="row">
+    <label for="email-input">Email</label>
+    <input id="email-input" type="text"/>
+  </div>
+  <div class="row">
+    <label for="address-input">Адрес</label>
+    <input id="address-input" type="text"/>
+  </div>
+  <div class="row button">
+      <button name="orders" type="button" onclick="createOrder()">Оформить заказ</button>
+  </div>
+  <div class="error row" id="error">
+    <div id="wrong-size"></div>
+    <div id="empty-fields"></div>
+    <div id="wrong-name"></div>
+    <div id="wrong-phone"></div>
+    <div id="wrong-email"></div>
+    <div id="wrong-address"></div>
+  </div>
+</div>
+</body>
+</html>

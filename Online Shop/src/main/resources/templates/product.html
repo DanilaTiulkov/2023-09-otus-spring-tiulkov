@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Продукт</title>
+</head>
+
+  <style>
+
+    body {
+      padding: 50px;
+    }
+
+    table{
+      width: 700px;
+      border: 1px solid black;
+      border-collapse: collapse;
+      margin: auto;
+    }
+
+    .title {
+      display: block;
+      width: auto;
+      height: auto;
+      font-size: 30px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    td:nth-child(even) {
+      width: 40%;
+      text-align: right;
+    }
+
+    tr:nth-child(even) {
+      background: whitesmoke;
+    }
+
+    tr:hover {
+      background: antiquewhite;
+    }
+
+    .button {
+      display: inline-block;
+      width: 70px;
+      margin-top: 20px;
+      margin-left: 45%;
+    }
+
+    .center{
+      width: 700px;
+      margin: auto;
+    }
+  </style>
+
+  <script>
+
+    function initProduct() {
+      fetch("/api/products/[[${productId}]]").then(result => result.json()).then(product => {
+        let productTbody = document.getElementById("product-tbody");
+        let span = document.getElementById("product-name-and-price");
+        span.innerHTML =`${product.title}` + ", " + `${product.price} RUB`
+        productTbody.innerHTML = `
+        <tr>
+            <td>Название</td>
+            <td>${product.title}</td>
+        </tr>
+        <tr>
+            <td>Цена</td>
+            <td>${product.price}, RUB</td>
+        </tr>
+        <tr>
+            <td>Категория</td>
+            <td>${product.categoryDto.name}</td>
+        </tr>`
+        initCharacteristic([[${productId}]]);
+      });
+    }
+
+    function initCharacteristic(productId) {
+      let productTbody = document.getElementById("product-tbody");
+      fetch(`/api/products/${productId}/characteristics`).then(response => response.json()).then(characteristic => {
+        productTbody.innerHTML += `
+        <tr>
+            <td>Емкость батареи</td>
+            <td>${characteristic.batteryCapacity}, Ач</td>
+        </tr>
+        <tr>
+            <td>Цвет</td>
+            <td>${characteristic.color}</td>
+        </tr>
+        <tr>
+            <td>Размер</td>
+            <td>${characteristic.size}, мм</td>
+        </tr>
+        <tr>
+            <td>Бренд</td>
+            <td>${characteristic.brandDto.name}</td>
+        </tr>
+        <tr>
+            <td>Страна производитель</td>
+            <td>${characteristic.brandDto.country}</td>
+        </tr>`
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", initProduct);
+
+  </script>
+<body>
+  <div class="center">
+    <div>
+      <span id="product-name-and-price" class="title">
+
+      </span>
+    </div>
+    <table>
+      <tbody id="product-tbody">
+
+      </tbody>
+    </table>
+    <div class="button">
+      <a href="/products">
+        <button id="cansel" type="button">Назад</button>
+      </a>
+    </div>
+  </div>
+</body>
+</html>
