@@ -24,7 +24,7 @@ create table Characteristics(
     color varchar(255),
     size varchar (255),
     brand_id bigint,
-    product_id bigint,
+    product_id bigint unique,
     foreign key (brand_id) references Brands(brand_id) on delete CASCADE,
     foreign key (product_id) references Products(product_id) on delete CASCADE
 );
