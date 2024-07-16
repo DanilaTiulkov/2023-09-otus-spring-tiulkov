@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+  <style>
+
+    label {
+      display: inline-block;
+      width: 120px;
+    }
+
+    .buttons {
+      display: inline-block;
+      width: 150px;
+      margin-top: 20px;
+      margin-left: 30%;
+    }
+
+    .center{
+      width: 300px;
+      margin: auto;
+    }
+
+    .row{
+      margin-top: 10px;
+    }
+
+    .error {
+      text-align: center;
+      color: red;
+    }
+  </style>
+
+  <script>
+
+      function initProduct() {
+        let selectedCategory = 0;
+        let selectedBrand = 0;
+          if ("[[${reference}]]" === "/products/edit") {
+              fetch("/api/products/[[${productId}]]").then(result => result.json()).then(product => {
+                  document.getElementById("productId-input").setAttribute("value", product.productId)
+                  document.getElementById("title-input").setAttribute("value", product.title);
+                  document.getElementById("price-input").setAttribute("value", product.price);
+                  document.getElementById("quantity-input").setAttribute("value", product.quantity)
+                  selectedCategory = product.categoryDto.categoryId;
+                  getCategories(selectedCategory);
+              });
+              fetch("/api/products/[[${productId}]]/characteristics").then(result => result.json()).then(characteristic => {
+                  document.getElementById("characteristicId-input").setAttribute("value", characteristic.characteristicId)
+                  document.getElementById("battery-input").setAttribute("value", characteristic.batteryCapacity)
+                  document.getElementById("color-input").setAttribute("value", characteristic.color);
+                  document.getElementById("size-input").setAttribute("value", characteristic.size);
+                  selectedBrand = characteristic.brandDto.brandId;
+                  getBrands(selectedBrand);
+              });
+          } else {
+            getCategories(selectedCategory);
+            getBrands(selectedBrand);
+          }
+      }
+
+    function createProduct() {
+      let productId
+      let characteristicId;
+      let title = document.getElementById("title-input").value;
+      let price =  document.getElementById("price-input").value;
+      let batteryCapacity =  document.getElementById("battery-input").value;
+      let color =  document.getElementById("color-input").value;
+      let size =  document.getElementById("size-input").value;
+      let quantity = document.getElementById("quantity-input").value;
+      let brandId =  document.getElementById("brand-select").value;
+      let categoryId = document.getElementById("category-select").value;
+      let arrayForValid = [title, price, batteryCapacity, color, size, brandId, categoryId];
+      if (validate(arrayForValid) === false) {
+        let productUrl;
+        let characteristicUrl;
+        let method;
+        let product;
+        let characteristic;
+        if ("[[${reference}]]" === "/products/edit") {
+          productId = document.getElementById("productId-input").value;
+          characteristicId = document.getElementById("characteristicId-input").value;
+          productUrl = "/api/products/" + productId;
+          characteristicUrl = "/api/characteristics/" + characteristicId;
+          method = 'PUT';
+          product = {
+            productId: productId,
+            title: title,
+            price: price,
+            quantity: quantity,
+            categoryId: categoryId
+          }
+          characteristic = {
+            characteristicId: characteristicId,
+            batteryCapacity: batteryCapacity,
+            color: color,
+            size: size,
+            brandId: brandId,
+            productId: productId
+          }
+        } else {
+          productUrl = "/api/products";
+          characteristicUrl = "/api/characteristics";
+          method = 'POST';
+          product = {
+            title: title,
+            price: price,
+            quantity: quantity,
+            categoryId: categoryId
+          }
+          characteristic = {
+            batteryCapacity: batteryCapacity,
+            color: color,
+            size: size,
+            brandId: brandId,
+          }
+        }
+        saveProduct(productUrl, characteristicUrl, method, product, characteristic);
+      }
+    }
+
+    function saveProduct(productUrl, characteristicUrl, method, product, characteristic) {
+      fetch(productUrl, {
+        method: method,
+        headers: {
+          'Accept' : 'application/json',
+          'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify(product)
+      }).then(response => response.json()).then(product => {
+        if (method === 'POST') {
+          characteristic["productId"] = product.productId;
+        }
+        fetch(characteristicUrl, {
+          method: method,
+          headers: {
+            'Accept' : 'application/json',
+            'Content-Type' : 'application/json'
+          },
+          body: JSON.stringify(characteristic)
+        }).then(response => {
+          if (response.ok) {
+            window.location.href = '/products'
+          }
+        });
+      });
+    }
+
+      function validate(arrayForValid) {
+        let hasError = false;
+        let checkSize = /\d{1,}[x]\d{1,}[x]\d{1,}/;
+        let checkEmpty = /([ ])\1/;
+        let checkColor = /[А-Яа-я]/;
+        let size = document.getElementById("size-input").value;
+        let color = document.getElementById("color-input").value;
+        let emptyFields = arrayForValid.some(element => (checkEmpty.test(element) || element === "" || element === "0"));
+        if (checkSize.test(size) === false) {
+          document.getElementById("empty-fields").innerHTML = "Неправильно введен размер";
+          hasError = true;
+        }
+        if (checkColor.test(color) === false) {
+          document.getElementById("wrong-color").innerHTML = "Неправильно введен цвет";
+          hasError = true;
+        }
+        if (emptyFields === true) {
+          document.getElementById("wrong-size").innerHTML = "Все поля дожны быть заполенены";
+          hasError = true;
+        }
+        return hasError;
+      }
+
+    function getCategories(selectedCategory) {
+        let categorySelect = document.getElementById("category-select");
+      fetch("/api/categories").then(response => response.json()).then(categories => {
+        categories.forEach(category => {
+            categorySelect.options[categorySelect.options.length] =
+                          new Option(category.name, category.categoryId)
+        });
+        categorySelect.value = selectedCategory;
+      });
+    }
+
+
+
+    function getBrands(selectedBrand) {
+      let brandSelect = document.getElementById("brand-select");
+        fetch("/api/brands").then(response => response.json()).then(brands => {
+            brands.forEach(brand => {
+                brandSelect.options[brandSelect.options.length] =
+                    new Option(brand.name, brand.brandId)
+            });
+          brandSelect.value = selectedBrand;
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", initProduct);
+
+  </script>
+<body>
+  <div class="center">
+    <div class="row" th:if="${reference == '/products/edit'}">
+      <label for="productId-input">ID</label>
+      <input id="productId-input" type="number" readonly/>
+    </div>
+    <div class="row" th:if="${reference == '/products/edit'}">
+      <label for="characteristicId-input">Characteristic ID</label>
+      <input id="characteristicId-input" type="number" readonly/>
+    </div>
+    <div class="row">
+      <label for="title-input">Название</label>
+      <input id="title-input" type="text"/>
+    </div>
+    <div class="row">
+      <label for="price-input">Цена</label>
+      <input id="price-input" type="number"/>
+    </div>
+    <div class="row">
+      <label for="battery-input">Емкость батареи</label>
+      <input id="battery-input" type="number"/>
+    </div>
+    <div class="row">
+      <label for="color-input">Цвет</label>
+      <input id="color-input" type="text"/>
+    </div>
+    <div class="row">
+      <label for="size-input">Размер</label>
+      <input id="size-input" type="text"/>
+    </div>
+    <div class="row">
+      <label for="quantity-input">Количество</label>
+      <input id="quantity-input" type="number"/>
+    </div>
+    <div class="row">
+      <label for="category-select">Категория</label>
+      <select id="category-select">
+        <option th:value="0" th:if ="${reference == '/products/new'}" >Введите категорию</option>
+      </select>
+    </div>
+    <div class="row">
+      <label for="brand-select">Бренд</label>
+      <select id="brand-select">
+        <option th:value="0" th:if ="${reference == '/products/new'}" >Введите бренд</option>
+      </select>
+    </div>
+    <div class="buttons">
+      <button id="save" type="button" onclick="createProduct()">Сохранить</button>
+      <a href="/products">
+        <button id="cansel" type="button">Отмена</button>
+      </a>
+    </div>
+    <div class="error row" id="error">
+      <div id="empty-fields"></div>
+      <div id="wrong-size"></div>
+      <div id="wrong-color"></div>
+    </div>
+  </div>
+</body>
+</html>

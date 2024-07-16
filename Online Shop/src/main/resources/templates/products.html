@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Товары</title>
+</head>
+    <style>
+        body {
+            padding: 50px;
+        }
+        table, td, th {
+            border: 1px solid black;
+            border-collapse: collapse;
+            margin: auto;
+            margin-bottom: 10px;
+            text-align: center
+        }
+
+        form {
+            display: inline-block;
+            padding: 5px;
+        }
+
+        .left {
+            width: 200px;
+            margin-left: auto;
+        }
+
+        .create {
+            width: 120px;
+            margin: auto;
+        }
+        .center {
+            width: 400px;
+            margin: auto;
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <script>
+
+        function initProducts() {
+            let searchStatus = "[[${searchStatus}]]";
+            let categoryId = Number("[[${categoryId}]]");
+            let productTitle = "[[${productTitle}]]";
+            if (searchStatus === "Off") {
+                fetch("/api/products").then(response => response.json()).then(products => {
+                fillOutTableProducts(products);
+            });
+            } else if (categoryId === 0 && productTitle === "") {
+                window.location.href = "/products";
+            } else {
+                fetch("/api/products/categories/" + categoryId + "?product-title=" + productTitle).then(response => response.json()).then(products => {
+                fillOutTableProducts(products);
+            });
+            }
+            initCategories();
+        }
+        
+        function fillOutTableProducts(products) {
+            let cookie = document.cookie;
+            let adminRole = document.getElementById("admin");
+            let userRole = document.getElementById("user");
+            let tbody = document.getElementById("tbody");
+                if (adminRole !== null) {
+                    products.forEach(product => {
+                        tbody.innerHTML += `
+                    <tr id="trId${product.productId}">
+                        <td>${product.productId}</td>
+                        <td>
+                            <a href="/products/${product.productId}">${product.title}</a>
+                        </td>
+                        <td>${product.price} ₽</td>
+                        <td>${product.categoryDto.name}</td>
+                        <td>
+                            ${product.quantity === 0 
+                                ? `<label>Товара нет в наличии</label>` 
+                                : getCookie(product.productId) !== null
+                                ? `<label>Добавлено в корзину</label>`
+                                : `<button id="add-to-cart-${product.productId}-button" type="button" onclick="addToCart(${product.productId})">Добавить в корзину</button>`}
+                        </td>
+                        <td>
+                            <a href="/products/edit/${product.productId}">
+                                <button type="button">Редактировать</button>
+                            </a>
+                        </td>
+                        <td>
+                            <button type="button" onclick="deleteProduct(${product.productId})">Удалить</button>
+                        </td>
+                    </tr>`
+                    });
+                } else {
+                    products.forEach(product => {
+                        tbody.innerHTML += `
+                    <tr id="trId${product.productId}">
+                        <td>${product.productId}</td>
+                        <td>
+                            <a href="/products/${product.productId}">${product.title}</a>
+                        </td>
+                        <td>${product.price} ₽</td>
+                        <td>${product.categoryDto.name}</td>
+                        <td>
+                            ${product.quantity === 0 
+                                ? `<label>Товара нет в наличии</label>` 
+                                : getCookie(product.productId) !== null
+                                ? `<label>Добавлено в корзину</label>`
+                                : `<button id="add-to-cart-${product.productId}-button" type="button" onclick="addToCart(${product.productId})">Добавить в корзину</button>`}
+                        </td>
+                    </tr>`
+                    });
+                }
+        }
+
+        function deleteProduct(productId) {
+            let rowIndex = document.getElementById("trId" + productId);
+            fetch("/api/products/" + productId, {method: 'DELETE'})
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById("tbody").removeChild(rowIndex);
+                    }
+                });
+        }
+
+        function addToCart(productId) {
+            let quantity = 1;
+            let addToCartButton = document.getElementById("add-to-cart-" + productId +"-button");
+            let addedToCartLabel = document.createElement("label");
+            addedToCartLabel.innerHTML = "Добавлено в корзину";
+            addToCartButton.replaceWith(addedToCartLabel);
+            document.cookie = productId + "=" + quantity + ";max-age=3600; path=/";
+        }
+
+        function initCategories () {
+            let categoriesSelect = document.getElementById("categories-select");
+            fetch("/api/categories").then(response => response.json()).then(categories => {
+                categories.forEach(category => {
+                    categoriesSelect.options[categoriesSelect.options.length] = 
+                        new Option(category.name, category.categoryId);
+                })
+            })
+        }
+
+        function findProducts() {
+            let categoryId = document.getElementById("categories-select").value;
+            let productTitle = document.getElementById("product-title").value;
+            window.location.href = "/products/categories/" + categoryId +"?product-title=" + productTitle;
+        }
+
+        function getCookie(name) {
+           let cookie = document.cookie.split("; ").find(row => row.startsWith(name + "="));
+           return cookie ? cookie.split("=")[1] : null;
+       }
+
+        document.addEventListener("DOMContentLoaded", initProducts);
+
+    </script>
+<body>
+<div class="left">
+    <form th:action="@{/personal}">
+        <button name="personalArea" type="submit">Аутентификация</button>
+    </form>
+    <a href="/personal/cart">
+        <button type="button">Корзина</button>
+    </a>
+</div>
+<div class="center">
+    <button id="find-products" type="button" onclick="findProducts()">Найти товар</button>
+    <select id="categories-select" name="category">
+        <option th:value = "0">Категория</option>
+    </select>
+    <input id="product-title" name="product" type="text" value=""/>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Category</th>
+    </tr>
+    </thead>
+    <tbody id="tbody">
+
+    </tbody>
+</table>
+<div class="create" sec:authorize="hasRole('ADMIN')">
+    <form th:action="@{/products/new}">
+        <button name="createProduct" type="submit">Создать продукт</button>
+    </form>
+</div>
+<input id="admin" type="hidden" sec:authorize="hasRole('ADMIN')" value="admin"/>
+<input id="user" type="hidden" sec:authorize="hasRole('USER')" value="user"/>
+</body>
+</html>

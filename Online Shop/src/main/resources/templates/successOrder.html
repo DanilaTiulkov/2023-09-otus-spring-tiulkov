@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Заказ успешно оформлен</title>
+</head>
+<style>
+    .center{
+        font-size: 30px;
+        text-align: center;
+    }
+</style>
+
+<script>
+    function fillOutSuccessTitle() {
+        let orderId = [[${orderId}]];
+        document.getElementById("success-title").innerHTML = "Заказ № " + orderId + " успешно создан";
+        deleteCookies();
+    }
+
+    
+    function deleteCookies() {
+        let cookies = document.cookie.split("; ");
+    
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i];
+            let eqPos = cookie.indexOf("=");
+            let name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+       }
+    }
+
+    document.addEventListener("DOMContentLoaded", fillOutSuccessTitle);
+
+</script>
+<body>
+    <div class="center">
+        <p id="success-title"></p>
+        <a href="/products">
+            <button type="button">На главную</button>
+        </a>
+    </div>
+</body>
+</html>
