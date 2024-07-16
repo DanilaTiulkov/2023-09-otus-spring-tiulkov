@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/libraryDB
+    username: root
+    password: root
+    driverClassName: org.postgresql.Driver
+
+  jpa:
+    database: POSTGRESQL
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+  sql:
+    init:
+      mode: always
+
+#      data-locations: data.sql
+#      schema-locations: schema.sql
