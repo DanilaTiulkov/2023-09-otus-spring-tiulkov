@@ -131,5 +131,4 @@ public class ControllerSecurityTest {
                 get("/api/authors"),
                 get("/api/genres"));
     }
-
 }
